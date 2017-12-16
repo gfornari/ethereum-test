@@ -42,6 +42,17 @@ def add_peers(client_number, enodes):
 				print(cmd)
 
 
+#Debug function that checks that the numbers of peers corresponds to 
+#the expected one
+def check_number_of_peers(client_number):
+	for i in range(0, client_number):
+		rpc_port = "%d%02d " % (prefix_rpc_port, i)
+		cmd = "geth --datadir=/tmp/eth/" + str(i) + " attach http://127.0.0.1:" + rpc_port + " --exec net.peerCount"
+		peers = int(subprocess.check_output(cmd.split()).decode('ascii').split()[0])
+		if peers != client_number:
+			print("Some peers were lost")
+			raise
+
 
 
 def main(argv):
@@ -59,6 +70,7 @@ def main(argv):
 		#Fetching the enodes of the 
 		enodes = retrieve_enodes(client_number)
 		add_peers(client_number, enodes)
+		check_number_of_peers(client_number)
 
 
 if __name__ == "__main__":
