@@ -2,28 +2,49 @@ import os
 import subprocess
 import time
 import sys
+import errno
 
-prefix_port = 3030
-prefix_rpc_port = 810
+
+
+prefix_port = 303
+prefix_rpc_port = 81
 genesis_block_path = 'genesis_block.json'
 genesis_block_url = 'http://genesisblock.altervista.org/genesis_block.json'
 
 
 
+
+
 def main(argv):
-	
 	i = int(argv[1])
+	port = "%d%02d" % (prefix_port, i)
+	rpc_port = "%d%02d" % (prefix_rpc_port, i)
+	data_dir = "/tmp/eth/" + str(i)
+	tmp_data_dir = "/tmp/foo/" + str(i)
+	genesis_block_path = 'genesis_block.json'
+	
+	try:
+		os.makedirs(data_dir)
+		os.makedirs(tmp_data_dir)
+	except OSError as e:
+		if e.errno != errno.EEXIST:
+			raise  # raises the error again
+	
+	
+	
 	print ("node " + str(i))
-	cmd1 = "wget " + genesis_block_url + " -O " + genesis_block_path
+	genesis_block_path = tmp_data_dir + "/" + genesis_block_path
 	
-	# Create the blockchain
-	cmd2 = 'geth --datadir=/tmp/eth/' + str(i) + ' init ' + genesis_block_path + " 2>> /dev/null "
-	# ~ print(cmd2)
+	cmd1 = "wget " + genesis_block_url + " -O " + genesis_block_path 
+	
+	# ~ # Create the blockchain
+	cmd2 = 'geth --datadir=' + data_dir + ' init ' + genesis_block_path + " 2>> /dev/null "
+	print(cmd2)
 	
 	
-	cmd3 = 'geth --datadir=/tmp/eth/' + str(i) + ' --ipcdisable ' + \
-	'--port ' + str(prefix_port) + str(i) + ' --rpcport ' + \
-	str(prefix_rpc_port) + str(i) + ' --rpc --rpccorsdomain 127.0.0.1 --rpcapi eth,web3,miner,net,admin' +\
+	cmd3 = 'geth --datadir=' + data_dir + ' --ipcdisable ' + \
+	'--port ' + port + ' --rpcport ' + \
+	rpc_port + ' --rpc --rpccorsdomain 127.0.0.1 --rpcapi eth,web3,miner,net,admin' +\
 	' --networkid=11691524842890 --nodiscover console'
 	cmd = (cmd1 + " ; " + cmd2 + " ; " + cmd3)
 	print(cmd)
