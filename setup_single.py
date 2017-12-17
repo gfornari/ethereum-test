@@ -3,7 +3,7 @@ import subprocess
 import time
 import sys
 import errno
-
+import json
 
 
 prefix_port = 303
@@ -15,7 +15,9 @@ genesis_block_url = 'http://genesisblock.altervista.org/genesis_block.json'
 
 
 
+
 def main(argv):
+	
 	i = int(argv[1])
 	port = "%d%02d" % (prefix_port, i)
 	rpc_port = "%d%02d" % (prefix_rpc_port, i)
@@ -31,22 +33,24 @@ def main(argv):
 			raise  # raises the error again
 	
 	
-	
 	print ("node " + str(i))
 	genesis_block_path = tmp_data_dir + "/" + genesis_block_path
 	
-	cmd1 = "wget " + genesis_block_url + " -O " + genesis_block_path 
+	cmd1 = "wget " + genesis_block_url + " -O " + genesis_block_path
+	subprocess.call(cmd1.split())
 	
-	# ~ # Create the blockchain
+	genesis_block = json.load(open(genesis_block_path))
+	network_id=genesis_block["config"]["chainId"]
+	
+	# Command to initialize the the blockchain with the genesis_block
 	cmd2 = 'geth --datadir=' + data_dir + ' init ' + genesis_block_path + " 2>> /dev/null "
-	print(cmd2)
 	
-	
+	# Command to start a geth client that uses our test blockchain
 	cmd3 = 'geth --datadir=' + data_dir + ' --ipcdisable ' + \
 	'--port ' + port + ' --rpcport ' + \
 	rpc_port + ' --rpc --rpccorsdomain 127.0.0.1 --rpcapi eth,web3,miner,net,admin' +\
-	' --networkid=11691524842890 --nodiscover console'
-	cmd = (cmd1 + " ; " + cmd2 + " ; " + cmd3)
+	' --networkid=' + str(network_id) + '  --nodiscover console'
+	cmd = (cmd2 + " ; " + cmd3)
 	print(cmd)
 	# TODO: Find a portable way to open a new terminal, for now we have
 	# to comment/uncomment the following lines depending on the used
