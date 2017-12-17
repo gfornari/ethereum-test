@@ -8,7 +8,8 @@ prefix_rpc_port = 81
 genesis_block_path = 'genesis_block.json'
 genesis_block_url = 'http://genesisblock.altervista.org/genesis_block.json'
 
-
+# Start client_number setup_single.py script parallelly with the 
+# right node_id
 def start_nodes(client_number):
 	node_ids_string = ""
 	for i in range(0, client_number):
@@ -49,8 +50,8 @@ def check_number_of_peers(client_number):
 		rpc_port = "%d%02d " % (prefix_rpc_port, i)
 		cmd = "geth --datadir=/tmp/eth/" + str(i) + " attach http://127.0.0.1:" + rpc_port + " --exec net.peerCount"
 		peers = int(subprocess.check_output(cmd.split()).decode('ascii').split()[0])
-		if peers != client_number:
-			print("Some peers were lost")
+		if peers != (client_number - 1):
+			print("Node %d: found %d peers. Some peers were lost.." % (i, peers))
 			raise
 
 
@@ -71,7 +72,7 @@ def main(argv):
 		enodes = retrieve_enodes(client_number)
 		add_peers(client_number, enodes)
 		check_number_of_peers(client_number)
-
+		print("Setup successful..")
 
 if __name__ == "__main__":
     main(sys.argv)
