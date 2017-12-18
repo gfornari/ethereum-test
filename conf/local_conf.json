@@ -1,0 +1,11 @@
+{
+    "my_ip": "127.0.0.1",
+    "nodes": 
+    [
+        {
+            "address": "127.0.0.1",
+            "login_name": "",
+            "client_number": 3
+        }
+    ]
+}
