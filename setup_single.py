@@ -11,7 +11,8 @@ prefix_rpc_port = 81
 genesis_block_url = 'http://genesisblock.altervista.org/genesis_block.json'
 
 def create_dirs(remote_string_prefix, directory):
-	subprocess.call((remote_string_prefix + " mkdir -p " + directory).split()) 
+		print("Create dir: %s" % (directory))
+		subprocess.call((remote_string_prefix + " mkdir -p " + directory).split()) 
 
 def download_genesis_block(remote_string_prefix, genesis_block_path):
 	cmd1 = remote_string_prefix + " wget " + genesis_block_url + " -O " + genesis_block_path
@@ -28,7 +29,8 @@ def start_node(remote_string_prefix, data_dir, port, rpc_port, network_id, rpcad
 	# Command to start a geth client that uses our test blockchain
 	cmd3 = remote_string_prefix + 'geth --datadir=' + data_dir + ' --ipcdisable ' + \
 	'--port ' + port + ' --rpcport ' + \
-	rpc_port + ' --rpc --rpcaddr ' + rpcaddr + ' --rpccorsdomain ' + rpccorsdomain + ' --rpcapi eth,web3,miner,net,admin' +\
+	rpc_port + ' --rpc --rpcaddr ' + rpcaddr + ' --rpccorsdomain ' +\
+	rpccorsdomain + ' --rpcapi eth,web3,miner,net,admin,personal' +\
 	' --networkid=' + str(network_id) + '  --nodiscover'
 	print (cmd3)
 	subprocess.Popen(cmd3.split())
@@ -44,6 +46,7 @@ def main(argv):
 	if len(argv) < 2:
 		print("Usage: python %s <node_id> [login_name@server_name] [allowed_rpc_client_ip]" % (argv[0]))
 	else:
+		print(argv[1])
 		i = int(argv[1])
 		if len(argv) > 2:
 			a = argv[2].split("@")
@@ -51,15 +54,14 @@ def main(argv):
 			server_name = a[1]
 			rpcaddr = a[1]
 			remote = True
+			if login_name == "":
+				remote = False
 		if len(argv) > 3:
 			rpccorsdomain = argv[3]
+			print(rpccorsdomain)
 		
-		print ("node " + str(i))
 		remote_string_prefix = ""
 		if remote:
-			print("remote")
-			login_name = "root"
-			server_name = rpcaddr
 			remote_string_prefix = "ssh " + argv[2] + " "
 		
 		port = "%d%02d" % (prefix_port, i)
