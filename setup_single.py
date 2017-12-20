@@ -24,13 +24,13 @@ def initialize_blockchain(remote_string_prefix, data_dir, genesis_block_path):
     print(cmd)
     subprocess.call(cmd.split())
 
-def start_node(remote_string_prefix, data_dir, port, rpc_port, network_id, rpcaddr, rpccorsdomain):
+def start_node(remote_string_prefix, data_dir, port, rpc_port, network_id, rpcaddr, rpccorsdomain, bootnode):
     # Command to start a geth client that uses our test blockchain
     cmd = remote_string_prefix + 'geth --datadir=' + data_dir + ' --ipcdisable ' + \
     '--port ' + port + ' --rpcport ' + \
     rpc_port + ' --rpc --rpcaddr ' + rpcaddr + ' --rpccorsdomain ' +\
     rpccorsdomain + ' --rpcapi eth,web3,miner,net,admin,personal' +\
-    ' --networkid=' + str(network_id) + '  --nodiscover'
+    ' --networkid=' + str(network_id) + '  --bootnodes ' + bootnode + ' --'
     print(cmd)
     subprocess.Popen(cmd.split())
 
@@ -41,23 +41,26 @@ def main(argv):
     server_name = ""
     rpcaddr = "127.0.0.1"
     rpccorsdomain = "127.0.0.1"
-
+    bootnode = ""
     if len(argv) < 2:
-        print("Usage: python %s <node_id> [login_name@server_name]" +\
+        print("Usage: python %s <node_id> <bootnode> [login_name@server_name]" +\
         "[allowed_rpc_client_ip]" % (argv[0]))
     else:
         print(argv[1])
         i = int(argv[1])
-        if len(argv) > 2:
-            tmp = argv[2].split("@")
+        bootnode = argv[2]
+        
+        print("This is a : " + bootnode)
+        if len(argv) > 4:
+            tmp = argv[3].split("@")
             login_name = tmp[0]
             server_name = tmp[1]
             rpcaddr = tmp[1]
             remote = True
             if login_name == "":
                 remote = False
-        if len(argv) > 3:
-            rpccorsdomain = argv[3]
+        if len(argv) > 5:
+            rpccorsdomain = argv[4]
             print(rpccorsdomain)
 
         remote_string_prefix = ""
@@ -89,7 +92,7 @@ def main(argv):
         network_id = genesis_block["config"]["chainId"]
 
         start_node(remote_string_prefix, data_dir, port, rpc_port,\
-        network_id, rpcaddr, rpccorsdomain)
+        network_id, rpcaddr, rpccorsdomain, bootnode)
 
         # TODO: Find a portable way to open a new terminal, for now we have
         # to comment/uncomment the following lines depending on the used
