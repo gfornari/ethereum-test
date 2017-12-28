@@ -6,11 +6,13 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
-readonly BOOTNODE_PORT=2999
+readonly BOOTNODE_PORT=29999
 readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
 readonly NODES_SETUP_SCRIPT=./nodes_setup.sh
 
-
+readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
+readonly REPO_OUTPUT_DIR="~/ethereum-test"
+readonly BRANCH_NAME="remote"
 
 #
 # Given the configuration information of a single machine executes the
@@ -23,10 +25,27 @@ start_machine() {
     local start_id=$4
     local bootnode_address=$5
     
+   
+    # This command will: 
+    # 1. Check if the repo exists. If it is not the case, it will 
+    # clone it.
+    # 2. Cd in the right directory checkout in the right directory
+    # 3. Checkout the right branch
+    # 4. Update the content of the repo
+    # 5. Call the NODES_SETUP_SCRIPT
+    cmd="\
+    if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
+        git clone $GIT_REPOSITORY $REPO_OUTPUT_DIR;\
+    fi;\
+    cd $REPO_OUTPUT_DIR;\
+    git checkout $BRANCH_NAME;\
+    git pull;\
+    $NODES_SETUP_SCRIPT \"$num_client\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+    
     if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
-        $NODES_SETUP_SCRIPT "$num_client" "$start_id" "$bootnode_address" 
+        eval $cmd
     else
-        ssh $login_name@$address "bash -s" < $NODES_SETUP_SCRIPT "$num_client" "$start_id" "$bootnode_address"
+        ssh $login_name@$address "eval $cmd"
     fi
 }
 
@@ -45,7 +64,7 @@ start_bootnode() {
         sleep 1
         lsof -i :$BOOTNODE_PORT 1> /dev/null 2> /dev/null
     done
-    printf "bootnode is up and running..\n" 
+    #~ printf "bootnode is up and running..\n" 
     echo $ENODE_ADDRESS
 }
 
@@ -86,7 +105,7 @@ main() {
     done
     #END FOR_EACH
 
-    echo "finito"
+    echo "done.."
 }
 
 main $ARGS
