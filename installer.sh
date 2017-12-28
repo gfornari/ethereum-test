@@ -100,7 +100,7 @@ case $PACKAGE_MANAGER in
     "apt-get")
     # Dependency GO
     apt-get_install "go" "go help" "golang-go"
-    # Dependency SSHD
+    # Dependency SSH
     apt-get_install "ssh" "which ssh" "openssh-client"
     # Dependency GIT
     apt-get_install "git" "git --version" "git"
