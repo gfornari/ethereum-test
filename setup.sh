@@ -11,7 +11,7 @@ readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
 readonly NODES_SETUP_SCRIPT=./nodes_setup.sh
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
-readonly REPO_OUTPUT_DIR="~/ethereum-test"
+readonly REPO_OUTPUT_DIR="./ethereum-test"
 readonly BRANCH_NAME="remote"
 
 #
