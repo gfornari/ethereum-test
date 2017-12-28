@@ -59,7 +59,7 @@ start_node_bg() {
         --networkid $NETWORKID \
         --bootnodes $BOOTNODES \
         js "$JS_SCRIPT_PATH" \
-        >> $OUTPUT_FILE 2>&1
+        >> $OUTPUT_FILE 2>&1 &
 }
 
 # check arguments
