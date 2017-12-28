@@ -37,14 +37,14 @@ start_node_bg() {
     NETWORKID=$2
     PORT=$3
     RPCPORT=$4
-    BOOTNODES=$5
+    RPCADDR=$5
+    BOOTNODES=$6
     KEYSTORE="keystore"
-    RPCADDR="*"
-    RPCCORSDOMAIN="127.0.0.1"
+    RPCCORSDOMAIN="*"
     RPCAPI="eth,web3,miner,net,admin,personal"
 
-    JS_SCRIPT_PATH=$6
-    OUTPUT_FILE=$7
+    JS_SCRIPT_PATH=$7
+    OUTPUT_FILE=$8
 
     nohup geth \
         --datadir $DATADIR \
@@ -63,14 +63,15 @@ start_node_bg() {
 }
 
 # check arguments
-if [ $# -lt 3 ]; then
-    printf "Usage: `basename "$0"` <nodes-amount> <first-node-index> <bootnodes>\n"
+if [ $# -lt 4 ]; then
+    printf "Usage: `basename "$0"` <nodes-amount> <first-node-index> <rcpaddr> <bootnodes>\n"
     exit 1
 fi
 
 NODES_AMOUNT=$1
 FIRST_NODE_INDEX=$2
-BOOTNODES=$3
+RCPADDR=$3
+BOOTNODES=$4
 
 BASE_DATADIR="/tmp/ethtest-datadir-"
 OUTPUT_DIR="logs"
@@ -112,9 +113,10 @@ for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         $NETWORKID \
         $PORT \
         $RPCPORT \
+        $RCPADDR \
         $BOOTNODES \
         $JS_SCRIPT_PATH \
         $OUTPUT_FILE
-    printf "Node started. Output in $OUTPUT_FILE\n"
+    printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
 done
 
