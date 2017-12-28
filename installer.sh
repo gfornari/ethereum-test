@@ -1,8 +1,8 @@
 #!/bin/bash
 # This script checks if the dependencies are installed.
 # Supported Linux distros: debian-based/arch-based
-# 
-# Dependencies: 
+#
+# Dependencies:
 # GO SSHD GIT GETH
 
 
@@ -11,7 +11,7 @@
 #
 check_if_root() {
     if [[ $EUID -ne 0 ]]; then
-        echo "This script must be run as root" 
+        echo "This script must be run as root"
         exit 1
     fi
 }
@@ -40,14 +40,14 @@ install() {
     CMD_NAME=$2
     CMD=$3
     PACKAGE_NAME=$4
-    
+
     printf "Checking if $CMD_NAME is installed ... "
-    $CMD 1> /dev/null 2> /dev/null && printf "yes\n" || 
+    $CMD 1> /dev/null 2> /dev/null && printf "yes\n" ||
     {
         printf "no\n"
         printf "Installing $CMD_NAME..\n"
-        $INSTALL_STRING $CMD 1> /dev/null 2> /dev/null || 
-        { 
+        $INSTALL_STRING $PACKAGE_NAME 1> /dev/null 2> /dev/null ||
+        {
             printf "Could not install $CMD_NAME\n"; exit 1;
         }
     }
@@ -83,8 +83,8 @@ PACKAGE_MANAGER=$(get_package_manager)
 echo "Detected $PACKAGE_MANAGER"
 
 
-case $PACKAGE_MANAGER in 
-    
+case $PACKAGE_MANAGER in
+
     "pacman")
     # Dependency GO
     pacman_install "go" "go help" "go"
