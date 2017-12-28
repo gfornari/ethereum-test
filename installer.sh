@@ -94,6 +94,8 @@ case $PACKAGE_MANAGER in
     pacman_install "git" "git --version" "git"
     # Dependency GETH
     pacman_install "geth" "geth --help" "geth"
+    # Dependency jq
+    pacman_install "jq" "jq --help" "jq"
     ;;
     "apt-get")
     # Dependency GO
@@ -107,6 +109,8 @@ case $PACKAGE_MANAGER in
     sudo add-apt-repository -y ppa:ethereum/ethereum
     sudo apt-get update
     sudo apt-get install ethereum
+    # Dependency jq
+    apt-get_install "jq" "jq --help" "jq"
     ;;
     *) echo "Not yet supported"
     ;;
