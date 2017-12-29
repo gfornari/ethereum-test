@@ -42,11 +42,14 @@ start_machine() {
     git pull;\
     $NODES_SETUP_SCRIPT \"$num_client\" \"$start_id\" \"$address\" \"$bootnode_address\";"
     
+    
+    
     if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
-        eval $cmd
+        echo $cmd | bash -s 
     else
-        ssh $login_name@$address "eval $cmd"
+        echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
+
 }
 
 #
