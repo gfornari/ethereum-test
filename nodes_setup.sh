@@ -40,24 +40,24 @@ start_node_bg() {
     RPCADDR=$5
     BOOTNODES=$6
     KEYSTORE="keystore"
-    RPCCORSDOMAIN='"*"'
-    RPCAPI='"eth,web3,miner,net,admin,personal"'
+    RPCCORSDOMAIN="*"
+    RPCAPI="eth,web3,miner,net,admin,personal"
 
     JS_SCRIPT_PATH=$7
     OUTPUT_FILE=$8
     
     nohup geth \
-        --datadir $DATADIR \
-        --keystore $KEYSTORE \
+        --datadir "$DATADIR" \
+        --keystore "$KEYSTORE" \
         --ipcdisable \
-        --port $PORT \
+        --port "$PORT" \
         --rpc \
-        --rpcport $RPCPORT \
-        --rpcaddr $RPCADDR \
-        --rpccorsdomain $RPCCORSDOMAIN \
-        --rpcapi $RPCAPI \
-        --networkid $NETWORKID \
-        --bootnodes $BOOTNODES \
+        --rpcport "$RPCPORT" \
+        --rpcaddr "$RPCADDR" \
+        --rpccorsdomain "$RPCCORSDOMAIN" \
+        --rpcapi "$RPCAPI" \
+        --networkid "$NETWORKID" \
+        --bootnodes "$BOOTNODES" \
         js "$JS_SCRIPT_PATH" \
         >> $OUTPUT_FILE 2>&1 &
 }
@@ -109,14 +109,15 @@ for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         " | cat - sendTransactions.js > $JS_SCRIPT_PATH
 
     start_node_bg \
-        $DATADIR \
-        $NETWORKID \
-        $PORT \
-        $RPCPORT \
-        $RCPADDR \
-        $BOOTNODES \
-        $JS_SCRIPT_PATH \
-        $OUTPUT_FILE
+        "$DATADIR" \
+        "$NETWORKID" \
+        "$PORT" \
+        "$RPCPORT" \
+        "$RCPADDR" \
+        "$BOOTNODES" \
+        "$JS_SCRIPT_PATH" \
+        "$OUTPUT_FILE"
+    
     printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
 done
 
