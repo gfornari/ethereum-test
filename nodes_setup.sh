@@ -40,12 +40,12 @@ start_node_bg() {
     RPCADDR=$5
     BOOTNODES=$6
     KEYSTORE="keystore"
-    RPCCORSDOMAIN="*"
-    RPCAPI="eth,web3,miner,net,admin,personal"
+    RPCCORSDOMAIN='"*"'
+    RPCAPI='"eth,web3,miner,net,admin,personal"'
 
     JS_SCRIPT_PATH=$7
     OUTPUT_FILE=$8
-
+    
     nohup geth \
         --datadir $DATADIR \
         --keystore $KEYSTORE \
