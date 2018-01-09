@@ -101,7 +101,7 @@ for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
     # start geth node in background
     NETWORKID=$(read_chainid)
     PORT=$((30300 + $node))
-    RPCPORT=$((8100 + $node))
+    RPCPORT=$((8545 + $node))
 
     printf "conf = {};
         conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
