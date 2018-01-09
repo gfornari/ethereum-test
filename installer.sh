@@ -111,6 +111,8 @@ main() {
         apt-get_install "ssh" "which ssh" "openssh-client"
         # Dependency GIT
         apt-get_install "git" "git --version" "git"
+	# Dependency jq
+        apt-get_install "jq" "jq --help" "jq"
         # Depedency GETH
         #~ sudo apt-get install software-properties-common
         #~ sudo add-apt-repository -y ppa:ethereum/ethereum
@@ -132,8 +134,6 @@ main() {
             make geth
             sudo cp build/bin/geth /usr/local/bin/
         }
-        # Dependency jq
-        apt-get_install "jq" "jq --help" "jq"
         ;;
 
 
