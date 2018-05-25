@@ -8,7 +8,7 @@ readonly ARGS="$@"
 
 readonly BOOTNODE_PORT=29999
 readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
-readonly NODES_SETUP_SCRIPT=./nodes_setup.sh
+readonly NODES_SETUP_SCRIPT="./nodes_setup.sh"
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
 readonly REPO_OUTPUT_DIR="./ethereum-test"
@@ -45,6 +45,9 @@ start_machine() {
     
     
     if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
+        printf "local\n\n\n"
+        cmd="git checkout $BRANCH_NAME;\
+        $NODES_SETUP_SCRIPT \"$num_client\" \"$start_id\" \"$address\" \"$bootnode_address\";"
         echo $cmd | bash -s 
     else
         echo $cmd | ssh "$login_name@$address" "bash -s"
@@ -80,7 +83,7 @@ main() {
 
     local readonly CONF_FILE=$1
     local readonly ENODE_ADDRESS=$(start_bootnode)
-
+    printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
 
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
