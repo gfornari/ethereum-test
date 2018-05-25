@@ -41,7 +41,7 @@ start_node_bg() {
     BOOTNODES=$6
     KEYSTORE="keystore"
     RPCCORSDOMAIN="*"
-    RPCAPI="eth,web3,miner,net,admin,personal"
+    RPCAPI="eth,web3,miner,net,admin,personal,debug"
 
     JS_SCRIPT_PATH=$7
     OUTPUT_FILE=$8
@@ -58,6 +58,7 @@ start_node_bg() {
         --rpcapi "$RPCAPI" \
         --networkid "$NETWORKID" \
         --bootnodes "$BOOTNODES" \
+        --metrics \
         js "$JS_SCRIPT_PATH" \
         >> $OUTPUT_FILE 2>&1 &
 }
