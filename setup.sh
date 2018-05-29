@@ -12,7 +12,7 @@ readonly NODES_SETUP_SCRIPT="./nodes_setup.sh"
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
 readonly REPO_OUTPUT_DIR="./ethereum-test"
-readonly BRANCH_NAME="remote"
+readonly BRANCH_NAME="develop"
 
 #
 # Given the configuration information of a single machine executes the
