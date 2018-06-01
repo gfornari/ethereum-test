@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Constants used along the program
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
+
 ask_yn() {
     QUESTION=${1}
     EXIT_ANSWER=${2:-Nn}
@@ -63,62 +68,68 @@ start_node_bg() {
         >> $OUTPUT_FILE 2>&1 &
 }
 
-# check arguments
-if [ $# -lt 4 ]; then
-    printf "Usage: `basename "$0"` <nodes-amount> <first-node-index> <rcpaddr> <bootnodes>\n"
-    exit 1
-fi
+main() { 
 
-NODES_AMOUNT=$1
-FIRST_NODE_INDEX=$2
-RCPADDR=$3
-BOOTNODES=$4
+    # check arguments
+    if [ $# -lt 4 ]; then
+        printf "Usage: `basename "$0"` <nodes-amount> <first-node-index> <rcpaddr> <bootnodes>\n"
+        exit 1
+    fi
 
-BASE_DATADIR="/tmp/ethtest-datadir-"
-OUTPUT_DIR="logs"
-JS_SCRIPTS_DIR="js-scripts"
+    NODES_AMOUNT=$1
+    FIRST_NODE_INDEX=$2
+    RCPADDR=$3
+    BOOTNODES=$4
 
-# check if output dir already exists
-check_dir $OUTPUT_DIR
+    BASE_DATADIR="/tmp/ethtest-datadir-"
+    OUTPUT_DIR="logs"
+    JS_SCRIPTS_DIR="js-scripts"
 
-# check if js scripts dir already exists
-check_dir $JS_SCRIPTS_DIR
+    # check if output dir already exists
+    check_dir $OUTPUT_DIR
 
-# init and start the geth nodes
-for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
-    printf "Configuring node $node ...\n"
+    # check if js scripts dir already exists
+    check_dir $JS_SCRIPTS_DIR
 
-    # build datadir and output file string
-    DATADIR=$BASE_DATADIR$node
-    OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
-    JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
+    # init and start the geth nodes
+    for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
+        printf "Configuring node $node ...\n"
 
-    # remove eventual preexisting directory
-    rm -rf $DATADIR
+        # build datadir and output file string
+        DATADIR=$BASE_DATADIR$node
+        OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
+        JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
 
-    # init genesis block
-    init_genesis $DATADIR $OUTPUT_FILE
+        # remove eventual preexisting directory
+        rm -rf $DATADIR
 
-    # start geth node in background
-    NETWORKID=$(read_chainid)
-    PORT=$((30300 + $node))
-    RPCPORT=$((8545 + $node))
+        # init genesis block
+        init_genesis $DATADIR $OUTPUT_FILE
 
-    printf "conf = {};
-        conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
-        conf.txDelay = 1000;
-        " | cat - sendTransactions.js > $JS_SCRIPT_PATH
+        # start geth node in background
+        NETWORKID=$(read_chainid)
+        PORT=$((30300 + $node))
+        RPCPORT=$((8545 + $node))
 
-    start_node_bg \
-        "$DATADIR" \
-        "$NETWORKID" \
-        "$PORT" \
-        "$RPCPORT" \
-        "$RCPADDR" \
-        "$BOOTNODES" \
-        "$JS_SCRIPT_PATH" \
-        "$OUTPUT_FILE"
-    
-    printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
-done
+        printf "conf = {};
+            conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
+            conf.txDelay = 1000;
+            " | cat - sendTransactions.js > $JS_SCRIPT_PATH
+
+        start_node_bg \
+            "$DATADIR" \
+            "$NETWORKID" \
+            "$PORT" \
+            "$RPCPORT" \
+            "$RCPADDR" \
+            "$BOOTNODES" \
+            "$JS_SCRIPT_PATH" \
+            "$OUTPUT_FILE"
+        
+        printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
+    done
+}
+
+
+main $ARGS
 
