@@ -59,22 +59,21 @@ start_node_bg() {
     OUTPUT_FILE=$8
     ROLE=$9
     
+
+    # Generate the ethash cache (both for miner and verifiers)
+    printf "Generating the cache in $ETHASH_CACHE_DIR."
+    printf " This may take a while ...\n"
+    geth --verbosity=0 makecache 0 "$ETHASH_CACHE_DIR"
+    printf "Cache Generated"
+
+    
+    # Miner should generate also the DAG 
     if [[ $ROLE = "miner" ]]; then
         printf "Generating the dag in $ETHASH_DAG_DIR."
         printf " This may take a while ...\n"
-        geth makedag 0 "$ETHASH_DAG_DIR"
-
+        geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
         printf "Dag generated"
-    else
-        printf "Generating the cache in $ETHASH_DAG_CACHE."
-        printf " This may take a while ...\n"
-        geth makecache 0 "$ETHASH_CACHE_DIR"
-        printf "Cache Generated"
     fi
-    
-    
-    
-    
     
     
     
