@@ -92,6 +92,7 @@ start_node_bg() {
         --metrics \
         --ethash.cachedir "$ETHASH_CACHE_DIR" \
         --ethash.dagdir "$ETHASH_DAG_DIR" \
+        --cpuprofile "geth.cpu" \
         >> $OUTPUT_FILE 2>&1 &
         #js "$JS_SCRIPT_PATH" \
 }
