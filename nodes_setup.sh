@@ -45,6 +45,9 @@ start_node_bg() {
     RPCADDR=$5
     BOOTNODES=$6
     
+    ETHASH_DIR="~/ethhash"
+    ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
+    ETHASH_DAG_DIR="$ETHASH_DIR/dag"
     
     
     KEYSTORE="keystore"
@@ -58,11 +61,12 @@ start_node_bg() {
     
     if [[ $ROLE = "miner" ]]; then
         printf "Generating the dag. This may take a while ...\n"
-        geth --verbosity=0 makedag 0
+        geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
+
         printf "Dag generated"
     else
         printf "Generating the cache. This may take a while ...\n"
-        geth --verbosity=0 makecache 0
+        geth makecache 0 "$ETHASH_CACHE_DIR"
         printf "Cache Generated"
     fi
     
@@ -85,6 +89,8 @@ start_node_bg() {
         --networkid "$NETWORKID" \
         --bootnodes "$BOOTNODES" \
         --metrics \
+        --ethash.cachedir "$ETHASH_CACHE_DIR" \
+        --ethash.dagdir "$ETHASH_DAG_DIR" \
         js "$JS_SCRIPT_PATH" \
         >> $OUTPUT_FILE 2>&1 &
 }
