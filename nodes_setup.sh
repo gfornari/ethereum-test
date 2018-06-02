@@ -45,7 +45,7 @@ start_node_bg() {
     RPCADDR=$5
     BOOTNODES=$6
     
-    ETHASH_DIR="~/ethhash"
+    ETHASH_DIR="$HOME/ethash"
     ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
     ETHASH_DAG_DIR="$ETHASH_DIR/dag"
     
@@ -60,12 +60,14 @@ start_node_bg() {
     ROLE=$9
     
     if [[ $ROLE = "miner" ]]; then
-        printf "Generating the dag. This may take a while ...\n"
-        geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
+        printf "Generating the dag in $ETHASH_DAG_DIR."
+        printf " This may take a while ...\n"
+        geth makedag 0 "$ETHASH_DAG_DIR"
 
         printf "Dag generated"
     else
-        printf "Generating the cache. This may take a while ...\n"
+        printf "Generating the cache in $ETHASH_DAG_CACHE."
+        printf " This may take a while ...\n"
         geth makecache 0 "$ETHASH_CACHE_DIR"
         printf "Cache Generated"
     fi
