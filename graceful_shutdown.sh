@@ -17,10 +17,12 @@ stop_machine() {
     local address=$2
     if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
         pkill -SIGINT geth
+        pkill -f ./cpu_mem_info.sh
     else
         ssh "$login_name@$address" pkill -SIGINT geth
+        ssh "$login_name@$address" pkill -f ./cpu_mem_info.sh
     fi
-    pkill ./cpu_mem_info.sh
+   
 
 }
 
