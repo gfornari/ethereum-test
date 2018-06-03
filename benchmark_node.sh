@@ -114,7 +114,7 @@ main() {
 
     printf "conf = {};
         conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
-        conf.txDelay = 1000;
+        conf.txDelay = 100;
         " | cat - sendTransactions.js > "$JS_SCRIPT_PATH"
 
     start_benchmark \
