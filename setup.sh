@@ -34,7 +34,7 @@ start_benchmark() {
     
     
     
-    if [[ "$address" == "$IP_ADDRESS" ]]; then
+    if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
         "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address"
         echo $cmd | bash -s 
     else
@@ -97,9 +97,7 @@ start_bootnode() {
     bootnode --genkey=boot.key 
     local readonly BOOTNODE_PUB_KEY=$(bootnode --nodekey=boot.key --writeaddress)
     local readonly ENODE_ADDRESS="enode://$BOOTNODE_PUB_KEY@$IP_ADDRESS:$BOOTNODE_PORT"
-    
-    printf $ENODE_ADDRESS
-    
+        
     bootnode --nodekey=boot.key --addr ":$BOOTNODE_PORT" 1> /dev/null 2> /dev/null &
     # Wait until bootnode is up and running
     lsof -i :$BOOTNODE_PORT 1> /dev/null 2> /dev/null
