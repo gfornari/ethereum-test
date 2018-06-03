@@ -37,7 +37,7 @@ start_benchmark() {
     extra_option=$(eval echo $extra_option)
     
     
-    timeout -s SIGINT 500s nohup geth \
+    timeout -s SIGINT 300s nohup geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
@@ -59,7 +59,7 @@ start_benchmark() {
     ppid=$!
     
     # Let's wait for the spawning of the subprocess
-    sleep 0.5
+    sleep 1
     
     pid=$(ps -o pid= --ppid $ppid)
     
