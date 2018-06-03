@@ -102,6 +102,8 @@ start_node_bg() {
     
     ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
+    printf "started cpu/mem demon"
+    
     
     #js "$JS_SCRIPT_PATH \" 
 }
