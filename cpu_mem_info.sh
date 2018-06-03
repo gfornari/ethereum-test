@@ -12,6 +12,10 @@ main() {
     pid=$1
     output_file=$2
     
+    # Create file
+    rm $output_file
+    touch $output_file
+    
     while [[ true ]]; do
         ps -p $pid -o %cpu,%mem | sed 1d >> $output_file
         sleep 1
