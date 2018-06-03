@@ -20,7 +20,7 @@ main() {
         timestamp=$(date +%s)
         out=$(ps -p $pid -o %cpu,%mem --no-header)
         out_array=($out)
-        echo "$timestamp, ${out_array[0]}, ${out_array[1]}" > $output_file
+        echo "$timestamp, ${out_array[0]}, ${out_array[1]}" >> $output_file
         
         sleep 1
     done
