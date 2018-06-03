@@ -33,23 +33,17 @@ start_benchmark() {
     printf "\n\nstart machine $login_name@$address\n"
     
     
-   
-    # This command will: 
-    # 1. Check if the repo exists. If it is not the case, it will 
-    # clone it.
-    # 2. Cd in the right directory checkout in the right directory
-    # 3. Checkout the right branch
-    # 4. Update the content of the repo
-    # 5. Call the NODES_SETUP_SCRIPT
-    cmd="chmod +x $BENCHMARK_SCRIPT; \
-    $BENCHMARK_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
-    
-    
     
     if [[ "$address" == "$IP_ADDRESS" ]]; then
-        printf "local\n\n\n"
+        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address"
         echo $cmd | bash -s 
     else
+       
+        cmd="\
+        cd $REPO_OUTPUT_DIR;\
+        chmod +x $BENCHMARK_SCRIPT;\
+        $BENCHMARK_SCRIPT $role $start_id $address $bootnode_address"
+       
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
 
