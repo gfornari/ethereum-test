@@ -95,7 +95,7 @@ start_node_bg() {
         --cpuprofile "geth.cpu" \
         >> $OUTPUT_FILE 2>&1 &
     
-    pid=#!
+    pid=$!
     echo "The PID of the program is $pid"
     
     
