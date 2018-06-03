@@ -98,6 +98,8 @@ start_node_bg() {
     pid=$!
     echo "The PID of the program is $pid"
     
+    chmod +x cpu_mem_info.sh
+    
     ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
     
