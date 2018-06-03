@@ -4,6 +4,8 @@ myAccount = eth.accounts[conf.accountIndex];
 personal.unlockAccount(myAccount, 'supersonic');
 console.log('Account', myAccount, 'unlocked');
 
+counter = 0;
+
 txInterval = setInterval(function sendTransaction() {
   // build transaction
   tx = {
@@ -15,5 +17,5 @@ txInterval = setInterval(function sendTransaction() {
   // send transaction
   eth.sendTransaction(tx);
 
-  console.log('Transaction sent');
+  console.log('Transaction sent ' + counter);
 }, conf.txDelay);
