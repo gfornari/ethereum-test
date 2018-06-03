@@ -103,7 +103,7 @@ start_benchmark() {
     
     if [[ $ROLE = "miner" ]]; then
         extra_option="--minerthreads 1"
-    elif
+    else
         extra_option="--js $JS_SCRIPT_PATH"
     fi
     nohup geth \
