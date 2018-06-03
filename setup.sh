@@ -41,7 +41,7 @@ start_benchmark() {
     # 3. Checkout the right branch
     # 4. Update the content of the repo
     # 5. Call the NODES_SETUP_SCRIPT
-    cmd="chmod +x BENCHMARK_SCRIPT; \
+    cmd="chmod +x $BENCHMARK_SCRIPT; \
     $BENCHMARK_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
     
     
