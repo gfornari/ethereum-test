@@ -34,6 +34,8 @@ start_benchmark() {
     else
         extra_option="--js $JS_SCRIPT_PATH"
     fi
+    extra_option=$(eval echo $extra_option)
+
     
     
     timeout -s SIGINT 500s \ 
