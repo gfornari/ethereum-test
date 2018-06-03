@@ -32,10 +32,11 @@ start_benchmark() {
     if [[ $ROLE = "miner" ]]; then
         extra_option="--mine --minerthreads 1"
     else
-        echo $JS_SCRIPT_PATH
+        
         extra_option="--js $JS_SCRIPT_PATH"
     fi
     extra_option=$(eval echo $extra_option)
+    echo $extra_option
     
     
     timeout -s SIGINT 300s nohup geth \
