@@ -152,6 +152,9 @@ main() {
     # Benchmark
     #
     ###
+    
+    
+    printf "Setup complete. \n\n\n\n\n\n\n\n\n\n\n\n"
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
     local start_node_id=0

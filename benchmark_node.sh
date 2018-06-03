@@ -38,7 +38,7 @@ start_benchmark() {
 
     
     
-    timeout -s SIGINT 500s geth \
+    timeout -s SIGINT 500s nohup geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
