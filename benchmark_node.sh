@@ -37,8 +37,9 @@ start_benchmark() {
     fi
     extra_option=$(eval echo $extra_option)
     
+    test_time="20s"
     
-    timeout -s SIGINT 300s nohup geth \
+    timeout -s SIGINT $test_time nohup geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
@@ -72,7 +73,7 @@ start_benchmark() {
     
     touch "cpu.csv"
     
-    ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    timeout $test_time ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
     
     
