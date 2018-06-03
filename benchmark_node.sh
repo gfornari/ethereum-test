@@ -30,7 +30,7 @@ start_benchmark() {
     extra_option="" 
     
     if [[ $ROLE = "miner" ]]; then
-        extra_option="--minerthreads 1"
+        extra_option="--mine --minerthreads 1"
     else
         extra_option="--js $JS_SCRIPT_PATH"
     fi
@@ -56,12 +56,24 @@ start_benchmark() {
         $extra_option \
         >> $OUTPUT_FILE 2>&1 &
     
-    pid=$!
+    ppid=$!
+    
+    # Let's wait for the spawning of the subprocess
+    sleep 0.5
+    
+    pid=$(ps -o pid= --ppid $ppid)
+    
     echo "The PID of the program is $pid"
     
     chmod +x cpu_mem_info.sh
     
+    rm "cpu.csv"
+    
+    touch "cpu.csv"
+    
     ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    
+    
     
     printf "started cpu/mem demon"
 }
