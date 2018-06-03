@@ -129,7 +129,6 @@ main() {
         "$ROLE"
     
     printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
-    exit
 }
 
 
