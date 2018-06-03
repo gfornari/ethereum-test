@@ -18,7 +18,7 @@ readonly BRANCH_NAME="benchmark"
 # Given the configuration information of a single machine executes the
 # script on the machine passing the right arguments
 #
-start_machine() {
+setup_machine() {
     
     
     
@@ -61,6 +61,45 @@ start_machine() {
     fi
 
 }
+
+start_benchmark() {
+    local login_name=$1
+    local address=$2
+    local num_client=$3
+    local start_id=$4
+    
+    
+    
+   
+    # This command will: 
+    # 1. Check if the repo exists. If it is not the case, it will 
+    # clone it.
+    # 2. Cd in the right directory checkout in the right directory
+    # 3. Checkout the right branch
+    # 4. Update the content of the repo
+    # 5. Call the NODES_SETUP_SCRIPT
+    cmd="\
+    if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
+        git clone $GIT_REPOSITORY $REPO_OUTPUT_DIR;\
+    fi;\
+    cd $REPO_OUTPUT_DIR;\
+    git checkout $BRANCH_NAME;\
+    git pull;\
+    $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+    
+    
+    
+    if [[ "$address" == "$IP_ADDRESS" ]]; then
+        printf "local\n\n\n"
+        cmd="git checkout $BRANCH_NAME;\
+        $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+        echo $cmd | bash -s 
+    else
+        echo $cmd | ssh "$login_name@$address" "bash -s"
+    fi
+
+}
+
 
 #
 # Start bootnode
@@ -111,7 +150,7 @@ main() {
         role=$(jq -r ".role" $tmp_file)
         
         
-        start_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
+        setup_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
         
         start_id=$((start_id+num_client))
         
