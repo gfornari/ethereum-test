@@ -14,6 +14,7 @@ main() {
     
     while [[ true ]]; do
         ps -p $pid -o %cpu,%mem | sed 1d >> $output_file
+        sleep 1
     done
 }
 
