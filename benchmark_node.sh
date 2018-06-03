@@ -86,25 +86,7 @@ main() {
     OUTPUT_DIR="logs"
     JS_SCRIPTS_DIR="js-scripts"
 
-    # check if output dir already exists
-    check_dir $OUTPUT_DIR
-
-    # check if js scripts dir already exists
-    check_dir $JS_SCRIPTS_DIR
-
-    
-    printf "Configuring node $node ...\n"
-
-    # build datadir and output file string
-    DATADIR=$BASE_DATADIR$node
-    OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
-    JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
-
-    # remove eventual preexisting directory
-    rm -rf $DATADIR
-
-    # init genesis block
-    init_genesis $DATADIR $OUTPUT_FILE
+  
 
     # start geth node in background
     NETWORKID=$(read_chainid)
@@ -128,6 +110,7 @@ main() {
         "$ROLE"
     
     printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
+    exit
 }
 
 
