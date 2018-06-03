@@ -77,63 +77,6 @@ start_node_bg() {
 
 }
 
-start_benchmark() {
-    DATADIR=$1
-    NETWORKID=$2
-    PORT=$3
-    RPCPORT=$4
-    RPCADDR=$5
-    BOOTNODES=$6
-    
-    ETHASH_DIR="$HOME/ethash"
-    ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
-    ETHASH_DAG_DIR="$ETHASH_DIR/dag"
-    
-    
-    KEYSTORE="keystore"
-    RPCCORSDOMAIN="*"
-    RPCAPI="eth,web3,miner,net,admin,personal,debug"
-    
-
-    JS_SCRIPT_PATH=$7
-    OUTPUT_FILE=$8
-    ROLE=$9
-    
-    extra_option = 
-    
-    if [[ $ROLE = "miner" ]]; then
-        extra_option="--minerthreads 1"
-    else
-        extra_option="--js $JS_SCRIPT_PATH"
-    fi
-    nohup geth \
-        --datadir "$DATADIR" \
-        --keystore "$KEYSTORE" \
-        --ipcdisable \
-        --port "$PORT" \
-        --rpc \
-        --rpcport "$RPCPORT" \
-        --rpcaddr "$RPCADDR" \
-        --rpccorsdomain "$RPCCORSDOMAIN" \
-        --rpcapi "$RPCAPI" \
-        --networkid "$NETWORKID" \
-        --bootnodes "$BOOTNODES" \
-        --metrics \
-        --ethash.cachedir "$ETHASH_CACHE_DIR" \
-        --ethash.dagdir "$ETHASH_DAG_DIR" \
-        --cpuprofile "geth.cpu" \
-        "$extra_option" \
-        >> $OUTPUT_FILE 2>&1 &
-    
-    pid=$!
-    echo "The PID of the program is $pid"
-    
-    chmod +x cpu_mem_info.sh
-    
-    ./cpu_mem_info.sh "$pid" "cpu.csv" &
-    
-    printf "started cpu/mem demon"
-}
 
 
 
