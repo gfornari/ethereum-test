@@ -32,7 +32,7 @@ start_benchmark() {
     if [[ $ROLE = "miner" ]]; then
         extra_option="--minerthreads 1"
     else
-        extra_option="----js $JS_SCRIPT_PATH"
+        extra_option="--js $JS_SCRIPT_PATH"
     fi
     extra_option=$(eval echo $extra_option)
     
