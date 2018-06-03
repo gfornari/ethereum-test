@@ -36,7 +36,7 @@ start_benchmark() {
     fi
     
     
-    timeout -S SIGINT 500s \ 
+    timeout -s SIGINT 500s \ 
         nohup geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
@@ -87,7 +87,10 @@ main() {
     BASE_DATADIR="ethtest-datadir-"
     OUTPUT_DIR="logs"
     JS_SCRIPTS_DIR="js-scripts"
-
+    
+    DATADIR=$BASE_DATADIR$node
+    OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
+    JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
   
 
     # start geth node in background
@@ -98,7 +101,7 @@ main() {
     printf "conf = {};
         conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
         conf.txDelay = 1000;
-        " | cat - sendTransactions.js > $JS_SCRIPT_PATH
+        " | cat - sendTransactions.js > "$JS_SCRIPT_PATH"
 
     start_benchmark \
         "$DATADIR" \
