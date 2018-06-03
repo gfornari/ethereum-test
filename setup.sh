@@ -59,7 +59,8 @@ setup_machine() {
     local address=$2
     local num_client=$3
     local start_id=$4
-    
+    local bootnode_address=$5
+
     
     
    
