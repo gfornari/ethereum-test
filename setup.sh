@@ -9,7 +9,7 @@ readonly ARGS="$@"
 readonly BOOTNODE_PORT=29999
 readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
 readonly NODES_SETUP_SCRIPT="./nodes_setup.sh"
-readonly BENCHMARK_SCRIPT="./benchmark.sh"
+readonly BENCHMARK_SCRIPT="./benchmark_node.sh"
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
 readonly REPO_OUTPUT_DIR="./ethereum-test"
@@ -41,7 +41,8 @@ start_benchmark() {
     # 3. Checkout the right branch
     # 4. Update the content of the repo
     # 5. Call the NODES_SETUP_SCRIPT
-    cmd="$BENCHMARK_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+    cmd="chmod +x BENCHMARK_SCRIPT; \
+    $BENCHMARK_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
     
     
     
