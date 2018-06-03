@@ -17,6 +17,7 @@ main() {
     touch $output_file
     
     while [[ true ]]; do
+        date +%s >> $output_file
         ps -p $pid -o %cpu,%mem | sed 1d >> $output_file
         sleep 1
     done
