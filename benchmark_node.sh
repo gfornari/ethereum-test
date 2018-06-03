@@ -1,4 +1,9 @@
+#!/bin/bash
 
+# Constants used along the program
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
 
 start_benchmark() {
     DATADIR=$1
