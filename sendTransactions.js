@@ -17,5 +17,5 @@ txInterval = setInterval(function sendTransaction() {
   // send transaction
   eth.sendTransaction(tx);
 
-  console.log('Transaction sent ' + counter);
+  console.log('Transaction sent ' + counter++);
 }, conf.txDelay);
