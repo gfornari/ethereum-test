@@ -16,11 +16,11 @@ stop_machine() {
     local login_name=$1
     local address=$2
     if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
-        pkill -SIGKILL geth
+        killall -s SIGKILL geth
         pkill -f ./cpu_mem_info.sh
     else
-        ssh "$login_name@$address" pkill -s SIGKILL geth
-        ssh "$login_name@$address" pkill -f ./cpu_mem_info.sh
+        ssh "$login_name@$address" killall -s SIGKILL geth
+        ssh "$login_name@$address" killall -f ./cpu_mem_info.sh
     fi
    
 
