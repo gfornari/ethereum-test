@@ -27,7 +27,7 @@ start_benchmark() {
     OUTPUT_FILE=$8
     ROLE=$9
     
-    extra_option = 
+    extra_option="" 
     
     if [[ $ROLE = "miner" ]]; then
         extra_option="--minerthreads 1"
@@ -38,8 +38,7 @@ start_benchmark() {
 
     
     
-    timeout -s SIGINT 500s \ 
-        nohup geth \
+    timeout -s SIGINT 500s geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \

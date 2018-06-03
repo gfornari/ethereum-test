@@ -98,7 +98,7 @@ start_bootnode() {
     local readonly BOOTNODE_PUB_KEY=$(bootnode --nodekey=boot.key --writeaddress)
     local readonly ENODE_ADDRESS="enode://$BOOTNODE_PUB_KEY@$IP_ADDRESS:$BOOTNODE_PORT"
     
-    print $ENODE_ADDRESS
+    printf $ENODE_ADDRESS
     
     bootnode --nodekey=boot.key --addr ":$BOOTNODE_PORT" 1> /dev/null 2> /dev/null &
     # Wait until bootnode is up and running
