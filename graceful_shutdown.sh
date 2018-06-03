@@ -20,7 +20,7 @@ stop_machine() {
         pkill -f ./cpu_mem_info.sh
     else
         ssh "$login_name@$address" killall -s SIGKILL geth
-        ssh "$login_name@$address" killall -f ./cpu_mem_info.sh
+        ssh "$login_name@$address" pkill -f ./cpu_mem_info.sh
     fi
    
 
