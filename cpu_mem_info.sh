@@ -17,8 +17,11 @@ main() {
     touch $output_file
     
     while [[ true ]]; do
-        date +%s >> $output_file
-        ps -p $pid -o %cpu,%mem | sed 1d >> $output_file
+        timestamp=$(date +%s)
+        out=$(ps -p $pid -o %cpu,%mem --no-header)
+        out_array=($out)
+        echo "$timestamp, ${out_array[0]}, ${out_array[1]}" > $output_file
+        
         sleep 1
     done
 }
