@@ -37,7 +37,7 @@ start_benchmark() {
     fi
     extra_option=$(eval echo $extra_option)
     
-    test_time="20s"
+    test_time="300s"
     
     timeout -s SIGINT $test_time nohup geth \
         --datadir "$DATADIR" \
@@ -73,7 +73,7 @@ start_benchmark() {
     
     touch "cpu.csv"
     
-    timeout $test_time ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    timeout $test_time nohup ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
     
     

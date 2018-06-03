@@ -14,7 +14,6 @@ main() {
     
     # Create file
     rm $output_file
-    touch $output_file
     
     while [[ true ]]; do
         timestamp=$(date +%s)
