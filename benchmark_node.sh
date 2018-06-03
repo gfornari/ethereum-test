@@ -32,6 +32,7 @@ start_benchmark() {
     if [[ $ROLE = "miner" ]]; then
         extra_option="--mine --minerthreads 1"
     else
+        echo $JS_SCRIPT_PATH
         extra_option="--js $JS_SCRIPT_PATH"
     fi
     extra_option=$(eval echo $extra_option)
@@ -59,7 +60,7 @@ start_benchmark() {
     ppid=$!
     
     # Let's wait for the spawning of the subprocess
-    sleep 1
+    sleep 0.5
     
     pid=$(ps -o pid= --ppid $ppid)
     
