@@ -98,7 +98,7 @@ start_node_bg() {
     pid=$!
     echo "The PID of the program is $pid"
     
-    ps -p $pid -o %cpu,%mem | sed 1d >> cpu.txt
+    ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
     
     #js "$JS_SCRIPT_PATH \" 

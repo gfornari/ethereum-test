@@ -20,6 +20,7 @@ stop_machine() {
     else
         ssh "$login_name@$address" pkill -SIGINT geth
     fi
+    pkill ./cpu_mem_info.sh
 
 }
 
