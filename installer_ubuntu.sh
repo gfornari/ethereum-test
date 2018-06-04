@@ -22,7 +22,20 @@ check_if_root() {
 }
 
 
-
+check_if_installed() {
+    local readonly CMD_NAME=$1 # e.g. go
+    local readonly CMD=$2 # e.g. go env > /dev/null
+    printf "Checking if $CMD_NAME is installed ..."
+    $CMD 1> /dev/null 2> /dev/null
+    ret_val="$?"
+    if [[ "$ret_val" -ne 0 ]]; then
+        printf "no"
+    else
+        printf "yes"
+    fi
+    printf "\n"
+    return ret_val
+}
 
 install() {
     local readonly INSTALL_STRING=$1
@@ -30,6 +43,7 @@ install() {
     local readonly CMD=$3
     local readonly PACKAGE_NAME=$4
 
+    check_if_installed "$CMD_NAME"
     printf "Checking if $CMD_NAME is installed ... "
     $CMD 1> /dev/null 2> /dev/null && printf "yes\n" ||
     {
@@ -57,9 +71,11 @@ apt-get_install() {
 
 main() {
     check_if_root
+
+
+    check_if_installed
     architecture=$(uname -m)
-    
-    
+
     archive_name=""
     if [[ "$architecture" == "x86_64" ]]; then
         archive_name=go1.10.linux-amd64.tar.gz
@@ -68,6 +84,7 @@ main() {
         printf "Architecture '$architecture' currently not supported..."
         exit
     fi
+    
 
     archive_url=archive_name=go1.10.linux-amd64.tar.gz
     wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
