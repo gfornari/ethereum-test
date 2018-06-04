@@ -23,6 +23,26 @@ check_if_root() {
 
 
 
+
+install() {
+    local readonly INSTALL_STRING=$1
+    local readonly CMD_NAME=$2
+    local readonly CMD=$3
+    local readonly PACKAGE_NAME=$4
+
+    printf "Checking if $CMD_NAME is installed ... "
+    $CMD 1> /dev/null 2> /dev/null && printf "yes\n" ||
+    {
+        printf "no\n"
+        printf "Installing $CMD_NAME..\n"
+        $INSTALL_STRING $PACKAGE_NAME 1> /dev/null 2> /dev/null ||
+        {
+            printf "Could not install $CMD_NAME\n"; exit 1;
+        }
+    }
+}
+
+
 #
 # INSTALL WITH APT-GET
 #
@@ -32,6 +52,7 @@ apt-get_install() {
     local readonly PACKAGE_NAME=$3
     install "apt-get install -y " "$CMD_NAME" "$CMD" "$PACKAGE_NAME"
 }
+
 
 
 main() {
@@ -52,8 +73,14 @@ main() {
     wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
     tar -C /usr/local -xzf "$archive_name"
 
-    echo "export PATH=$PATH:/usr/local/go/bin:${HOME}/go/bin" >> ~/.bashrc
-    export PATH="$PATH:/usr/local/go/bin:${HOME}/go/bin"
+    
+    export GOROOT="/usr/local/go/"
+    export GOPATH="${HOME}/go_path"
+    export PATH="$PATH:${GOROOT}/bin"
+
+    echo "export GOROOT=${GOROOT}" >> ~/.bashrc
+    echo "export GOPATH=${GO_PATH}" >> ~/.bashrc
+    echo "export PATH=${PATH}" >> ~/.bashrc
 
     source ~/.bashrc
     # Checking if go is installed
