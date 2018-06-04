@@ -57,7 +57,7 @@ main() {
     source ~/.bashrc
     # Checking if go is installed
     go env > /dev/null
-    if [[ "$?" -ne "0" ]];
+    if [[ "$?" -ne "0" ]]; then
         printf "Go was not installed successfully ..."
         exit
     fi
