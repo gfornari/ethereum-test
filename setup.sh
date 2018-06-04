@@ -9,21 +9,54 @@ readonly ARGS="$@"
 readonly BOOTNODE_PORT=29999
 readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
 readonly NODES_SETUP_SCRIPT="./nodes_setup.sh"
+readonly BENCHMARK_SCRIPT="./benchmark_node.sh"
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
 readonly REPO_OUTPUT_DIR="./ethereum-test"
-readonly BRANCH_NAME="remote"
+readonly BRANCH_NAME="benchmark"
 
 #
 # Given the configuration information of a single machine executes the
 # script on the machine passing the right arguments
 #
-start_machine() {
+start_benchmark() {
+    
+    
+    
     local login_name=$1
     local address=$2
     local num_client=$3
     local start_id=$4
     local bootnode_address=$5
+    
+    
+    printf "\n\nstart machine $login_name@$address\n"
+    
+    
+    
+    if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
+        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address"
+        echo $cmd | bash -s 
+    else
+       
+        cmd="\
+        cd $REPO_OUTPUT_DIR;\
+        chmod +x $BENCHMARK_SCRIPT;\
+        $BENCHMARK_SCRIPT $role $start_id $address $bootnode_address"
+       
+        echo $cmd | ssh "$login_name@$address" "bash -s"
+    fi
+
+}
+
+setup_machine() {
+    local login_name=$1
+    local address=$2
+    local num_client=$3
+    local start_id=$4
+    local bootnode_address=$5
+
+    
     
    
     # This command will: 
@@ -40,20 +73,21 @@ start_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT \"$num_client\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+    $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
     
     
     
-    if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
+    if [[ "$address" == "$IP_ADDRESS" ]]; then
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
-        $NODES_SETUP_SCRIPT \"$num_client\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+        $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
         echo $cmd | bash -s 
     else
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
 
 }
+
 
 #
 # Start bootnode
@@ -63,6 +97,7 @@ start_bootnode() {
     bootnode --genkey=boot.key 
     local readonly BOOTNODE_PUB_KEY=$(bootnode --nodekey=boot.key --writeaddress)
     local readonly ENODE_ADDRESS="enode://$BOOTNODE_PUB_KEY@$IP_ADDRESS:$BOOTNODE_PORT"
+        
     bootnode --nodekey=boot.key --addr ":$BOOTNODE_PORT" 1> /dev/null 2> /dev/null &
     # Wait until bootnode is up and running
     lsof -i :$BOOTNODE_PORT 1> /dev/null 2> /dev/null
@@ -98,12 +133,43 @@ main() {
         echo $computer > $tmp_file
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
-        num_client=$(jq -r ".client_number" $tmp_file)
-        if [[ "$address" == "$IP_ADDRESS" ]]; then
-            address="127.0.0.1"
-        fi
+        role=$(jq -r ".role" $tmp_file)
         
-        start_machine "$login_name" "$address" "$num_client" "$start_node_id" "$ENODE_ADDRESS"
+        
+        setup_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
+        
+        start_id=$((start_id+num_client))
+        
+        computer_id=$((computer_id+1))
+    done
+    #END FOR_EACH
+
+    echo "Setup done .."
+    
+    ####
+    # Benchmark
+    #
+    ###
+    
+    
+    printf "Setup complete. \n\n\n\n\n\n\n\n\n\n\n\n"
+    #FOR_EACH COMPUTER IN TEST_CONF
+    local computer_id=0
+    local start_node_id=0
+    local computer=""
+    while [ true ]; do
+        computer=$(jq -r ".nodes[$computer_id]" $CONF_FILE)
+        if [ "$computer" == "null" ]; then
+            break;
+        fi
+        tmp_file=/tmp/tmp.json
+        echo $computer > $tmp_file
+        login_name=$(jq -r ".login_name" $tmp_file)
+        address=$(jq -r ".address" $tmp_file)
+        role=$(jq -r ".role" $tmp_file)
+        
+        
+        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
         
         start_id=$((start_id+num_client))
         
@@ -112,6 +178,7 @@ main() {
     #END FOR_EACH
 
     echo "done.."
+    
 }
 
 main $ARGS

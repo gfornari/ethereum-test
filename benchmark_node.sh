@@ -5,39 +5,7 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
-ask_yn() {
-    QUESTION=${1}
-    EXIT_ANSWER=${2:-Nn}
-
-    read -p "$QUESTION " -n 1 -r
-    echo    # move to a new line
-    if [[ $REPLY =~ ^[$EXIT_ANSWER]$ ]]; then
-        exit 0
-    fi
-}
-
-check_dir() {
-    DIR=$1
-
-    if [ -d "$DIR" ]; then
-        ask_yn "Directory $DIR already exists. Continue anyway?"
-    else
-        mkdir "$DIR"
-    fi
-}
-
-read_chainid() {
-    grep -E -o '"chainId"\s*:\s*[0-9]+' conf/genesis_block.json | grep -E -o '[0-9]+'
-}
-
-init_genesis() {
-    DATADIR=$1
-    OUTPUT_FILE=$2
-
-    geth init --datadir $DATADIR conf/genesis_block.json > $OUTPUT_FILE 2>&1
-}
-
-start_node_bg() {
+start_benchmark() {
     DATADIR=$1
     NETWORKID=$2
     PORT=$3
@@ -59,26 +27,61 @@ start_node_bg() {
     OUTPUT_FILE=$8
     ROLE=$9
     
-
-    # Generate the ethash cache (both for miner and verifiers)
-    printf "Generating the cache in $ETHASH_CACHE_DIR."
-    printf " This may take a while ...\n"
-    geth --verbosity=0 makecache 0 "$ETHASH_CACHE_DIR"
-    printf "Cache Generated\n"
-
+    extra_option="" 
     
-    # Miner should generate also the DAG 
     if [[ $ROLE = "miner" ]]; then
-        printf "Generating the dag in $ETHASH_DAG_DIR."
-        printf " This may take a while ...\n"
-        geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
-        printf "Dag generated\n"
+        extra_option="--mine --minerthreads 1"
+    else
+        
+        extra_option="js $JS_SCRIPT_PATH"
     fi
-
+    extra_option=$(eval echo $extra_option)
+    
+    test_time="300s"
+    
+    timeout -s SIGINT $test_time nohup geth \
+        --datadir "$DATADIR" \
+        --keystore "$KEYSTORE" \
+        --ipcdisable \
+        --port "$PORT" \
+        --rpc \
+        --rpcport "$RPCPORT" \
+        --rpcaddr "$RPCADDR" \
+        --rpccorsdomain "$RPCCORSDOMAIN" \
+        --rpcapi "$RPCAPI" \
+        --networkid "$NETWORKID" \
+        --bootnodes "$BOOTNODES" \
+        --metrics \
+        --ethash.cachedir "$ETHASH_CACHE_DIR" \
+        --ethash.dagdir "$ETHASH_DAG_DIR" \
+        --cpuprofile "geth.cpu" \
+        $extra_option \
+        >> $OUTPUT_FILE 2>&1 &
+    
+    ppid=$!
+    
+    # Let's wait for the spawning of the subprocess
+    sleep 0.5
+    
+    pid=$(ps -o pid= --ppid $ppid)
+    
+    echo "The PID of the program is $pid"
+    
+    chmod +x cpu_mem_info.sh
+    
+    rm "cpu.csv"
+    
+    touch "cpu.csv"
+    
+    timeout $test_time nohup ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    
+    
+    
+    printf "started cpu/mem demon"
 }
-
-
-
+read_chainid() {
+    grep -E -o '"chainId"\s*:\s*[0-9]+' conf/genesis_block.json | grep -E -o '[0-9]+'
+}
 
 
 main() { 
@@ -98,26 +101,11 @@ main() {
     BASE_DATADIR="ethtest-datadir-"
     OUTPUT_DIR="logs"
     JS_SCRIPTS_DIR="js-scripts"
-
-    # check if output dir already exists
-    check_dir $OUTPUT_DIR
-
-    # check if js scripts dir already exists
-    check_dir $JS_SCRIPTS_DIR
-
     
-    printf "Configuring node $node ...\n"
-
-    # build datadir and output file string
     DATADIR=$BASE_DATADIR$node
     OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
     JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
-
-    # remove eventual preexisting directory
-    rm -rf $DATADIR
-
-    # init genesis block
-    init_genesis $DATADIR $OUTPUT_FILE
+  
 
     # start geth node in background
     NETWORKID=$(read_chainid)
@@ -126,10 +114,10 @@ main() {
 
     printf "conf = {};
         conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
-        conf.txDelay = 1000;
-        " | cat - sendTransactions.js > $JS_SCRIPT_PATH
+        conf.txDelay = 100;
+        " | cat - sendTransactions.js > "$JS_SCRIPT_PATH"
 
-    start_node_bg \
+    start_benchmark \
         "$DATADIR" \
         "$NETWORKID" \
         "$PORT" \
@@ -145,4 +133,5 @@ main() {
 
 
 main $ARGS
+
 
