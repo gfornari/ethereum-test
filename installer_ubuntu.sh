@@ -34,7 +34,7 @@ check_if_installed() {
         printf "yes"
     fi
     printf "\n"
-    return ret_val
+    return $ret_val
 }
 
 install() {
