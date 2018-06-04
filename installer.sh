@@ -111,7 +111,7 @@ main() {
         apt-get_install "ssh" "which ssh" "openssh-client"
         # Dependency GIT
         apt-get_install "git" "git --version" "git"
-	# Dependency jq
+		# Dependency jq
         apt-get_install "jq" "jq --help" "jq"
         # Depedency GETH
         #~ sudo apt-get install software-properties-common
