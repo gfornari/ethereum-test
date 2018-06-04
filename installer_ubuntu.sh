@@ -53,6 +53,7 @@ main() {
     tar -C /usr/local -xzf "$archive_name"
 
     echo "export PATH=$PATH:/usr/local/go/bin:${HOME}/go/bin" >> ~/.bashrc
+    export PATH="$PATH:/usr/local/go/bin:${HOME}/go/bin"
 
     source ~/.bashrc
     # Checking if go is installed
