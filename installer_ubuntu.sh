@@ -76,7 +76,7 @@ main() {
     
     export GOROOT="/usr/local/go/"
     export GOPATH="${HOME}/go_path"
-    export PATH="$PATH:${GOROOT}/bin"
+    export PATH="$PATH:${GOROOT}/bin:${GOPATH}/bin"
 
     echo "export GOROOT=${GOROOT}" >> ~/.bashrc
     echo "export GOPATH=${GO_PATH}" >> ~/.bashrc
