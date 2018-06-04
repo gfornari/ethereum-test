@@ -63,7 +63,7 @@ main() {
     fi
     
     
-
+    apt-get update
     
     # Dependency SSHD
     apt-get_install "sshd" "which sshd" "openssh"
