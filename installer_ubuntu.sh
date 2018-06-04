@@ -73,38 +73,42 @@ main() {
     check_if_root
 
 
-    check_if_installed
-    architecture=$(uname -m)
+    check_if_installed "go" "go env > /dev/null"
 
-    archive_name=""
-    if [[ "$architecture" == "x86_64" ]]; then
-        archive_name=go1.10.linux-amd64.tar.gz
-       
-    else
-        printf "Architecture '$architecture' currently not supported..."
-        exit
-    fi
-    
+    if [[ "$?" -ne 0 ]]; then
 
-    archive_url=archive_name=go1.10.linux-amd64.tar.gz
-    wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
-    tar -C /usr/local -xzf "$archive_name"
+        architecture=$(uname -m)
 
-    
-    export GOROOT="/usr/local/go/"
-    export GOPATH="${HOME}/go_path"
-    export PATH="$PATH:${GOROOT}/bin:${GOPATH}/bin"
+        archive_name=""
+        if [[ "$architecture" == "x86_64" ]]; then
+            archive_name=go1.10.linux-amd64.tar.gz
+           
+        else
+            printf "Architecture '$architecture' currently not supported..."
+            exit
+        fi
+        
 
-    echo "export GOROOT=${GOROOT}" >> ~/.bashrc
-    echo "export GOPATH=${GO_PATH}" >> ~/.bashrc
-    echo "export PATH=${PATH}" >> ~/.bashrc
+        archive_url=archive_name=go1.10.linux-amd64.tar.gz
+        wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
+        tar -C /usr/local -xzf "$archive_name"
 
-    source ~/.bashrc
-    # Checking if go is installed
-    go env > /dev/null
-    if [[ "$?" -ne "0" ]]; then
-        printf "Go was not installed successfully ..."
-        exit
+        
+        export GOROOT="/usr/local/go/"
+        export GOPATH="${HOME}/go_path"
+        export PATH="$PATH:${GOROOT}/bin:${GOPATH}/bin"
+
+        echo "export GOROOT=${GOROOT}" >> ~/.bashrc
+        echo "export GOPATH=${GO_PATH}" >> ~/.bashrc
+        echo "export PATH=${PATH}" >> ~/.bashrc
+
+        source ~/.bashrc
+        # Checking if go is installed
+        go env > /dev/null
+        if [[ "$?" -ne "0" ]]; then
+            printf "Go was not installed successfully ..."
+            exit
+        fi
     fi
     
     
