@@ -45,7 +45,7 @@ start_node_bg() {
     RPCADDR=$5
     BOOTNODES=$6
     
-    ETHASH_DIR="$HOME/ethash"
+    ETHASH_DIR="./ethash"
     ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
     ETHASH_DAG_DIR="$ETHASH_DIR/dag"
     
