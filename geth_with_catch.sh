@@ -45,6 +45,7 @@ main() {
         --networkid "$8" \
         --bootnodes "$9" \
         --metrics \
+        --gcmode "archive"
         --ethash.cachedir "${10}" \
         --ethash.dagdir "${11}" \
         ${13}
