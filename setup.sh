@@ -30,6 +30,7 @@ start_benchmark() {
     local bootnode_address=$5
     local internal_address=$6
     local timeout_interval=$7
+    local tx_interval=$8
 
     
     
@@ -39,14 +40,14 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address" "$timeout_interval"
+        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address" "$timeout_interval" "$tx_interval"
         echo $cmd | bash -s 
     else
        
         cmd="\
         cd $REPO_OUTPUT_DIR;\
         chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address $timeout_interval"
+        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
        
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
@@ -126,6 +127,7 @@ main() {
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
     local readonly TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
+    
 
     printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
 
