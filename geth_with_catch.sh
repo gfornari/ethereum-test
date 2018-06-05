@@ -21,7 +21,7 @@ main() {
 
     trap "catch $5 $4" SIGINT
 
-    echo "$@"
+    echo $ARGS
 
     geth \
         --datadir "$1" \

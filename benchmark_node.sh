@@ -40,8 +40,8 @@ start_benchmark() {
     fi
     extra_option=$(eval echo $extra_option)
     
-    echo $NETWORKID
-    timeout $TEST_TIMEOUT ./geth_with_catch.sh \
+    echo "$NETWORKID"
+    timeout "$TEST_TIMEOUT" ./geth_with_catch.sh \
          "$DATADIR" \
          "$KEYSTORE" \
          "$PORT" \
