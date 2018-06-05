@@ -6,7 +6,7 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 catch() {
-    geth attach http://$1:$2 --exec "debug.metrics(false)"
+    geth attach http://$1:$2 --exec "debug.metrics(false)" > metrics.txt
     pkill geth
 
     # Do other useful stuffs, e.g. upload stats to central server and so on
