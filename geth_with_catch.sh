@@ -19,7 +19,7 @@ catch() {
 
 main() {
 
-    trap "catch $5 $4" SIGINT
+    trap "catch $5 $4" SIGTERM
 
     echo $ARGS
 
