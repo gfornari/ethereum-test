@@ -19,7 +19,7 @@ catch() {
 
 main() {
 
-    trap "catch $4 $5" SIGINT
+    trap "catch $5 $4" SIGINT
 
     geth \
         --datadir "$1" \
