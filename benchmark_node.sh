@@ -78,7 +78,7 @@ start_benchmark() {
     
     
     
-    printf "started cpu/mem demon"
+    printf "started cpu/mem demon\n"
 }
 read_chainid() {
     grep -E -o '"chainId"\s*:\s*[0-9]+' conf/genesis_block.json | grep -E -o '[0-9]+'
