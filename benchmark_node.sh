@@ -27,7 +27,7 @@ start_benchmark() {
     JS_SCRIPT_PATH=$7
     OUTPUT_FILE=$8
     ROLE=$9
-    TEST_TIMEOUT=$10
+    TEST_TIMEOUT=${10}
     
     extra_option="" 
     
