@@ -38,7 +38,6 @@ main() {
         --ethash.dagdir "${11}" \
         --cpuprofile "${12}" \
         ${13} \
-        >> $OUTPUT_FILE 2>&1 &
 
 }
 
