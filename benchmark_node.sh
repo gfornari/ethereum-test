@@ -10,7 +10,7 @@ start_benchmark() {
     NETWORKID=$2
     PORT=$3
     RPCPORT=$4
-    RPCADDR=$5
+    RPCADDR=0.0.0.0
     BOOTNODES=$6
     
     ETHASH_DIR="$HOME/ethash"
