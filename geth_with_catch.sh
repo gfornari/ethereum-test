@@ -21,6 +21,8 @@ main() {
 
     trap "catch $5 $4" SIGINT
 
+    echo "$@"
+
     geth \
         --datadir "$1" \
         --keystore "$2" \
@@ -37,7 +39,7 @@ main() {
         --ethash.cachedir "${10}" \
         --ethash.dagdir "${11}" \
         --cpuprofile "${12}" \
-        ${13} \
+        ${13}
 
 }
 
