@@ -1,9 +1,5 @@
 myAccount = eth.accounts[conf.accountIndex];
 
-// unlock account
-personal.unlockAccount(myAccount, 'supersonic');
-console.log('Account', myAccount, 'unlocked');
-
 counter = 0;
 
 txInterval = setInterval(function sendTransaction() {
@@ -13,6 +9,8 @@ txInterval = setInterval(function sendTransaction() {
     to: '0xc541d3722dda565493f777ff80afa9314ec9406c',
     value: 1,
   }
+  // unlock account
+  personal.unlockAccount(myAccount, 'supersonic');
 
   // send transaction
   eth.sendTransaction(tx);
