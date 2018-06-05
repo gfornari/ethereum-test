@@ -28,6 +28,7 @@ start_benchmark() {
     OUTPUT_FILE=$8
     ROLE=$9
     TEST_TIMEOUT=${10}
+    TX_INTERVAL=${11}
     
     extra_option="" 
     
@@ -98,6 +99,7 @@ main() {
     RCPADDR=$3
     BOOTNODES=$4
     TIMEOUT_INTERVAL=$5
+    TX_INTERVAL=$6
 
     printf "TIMEOUT_INTERVAL $TIMEOUT_INTERVAL ...\n"
 
@@ -119,7 +121,7 @@ main() {
 
     printf "conf = {};
         conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
-        conf.txDelay = 100;
+        conf.txDelay = $TX_INTERVAL;
         " | cat - sendTransactions.js > "$JS_SCRIPT_PATH"
 
     start_benchmark \

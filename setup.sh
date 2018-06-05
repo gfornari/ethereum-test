@@ -125,6 +125,7 @@ main() {
     # local readonly ENODE_ADDRESS=$(start_bootnode)
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
     local readonly TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
+    local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
 
     printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
 
@@ -180,7 +181,7 @@ main() {
         
         printf "$timeout"
         
-        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK"
+        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
         
         start_id=$((start_id+num_client))
         
