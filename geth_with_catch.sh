@@ -13,11 +13,15 @@ catch() {
     pkill geth
 
     # Do other useful stuffs, e.g. upload stats to central server and so on
+    trap - SIGINT # clear the trap
+    kill -- -$$ # Sends SIGTERM to child/sub processes
     exit 0
 }
 
 catch_sigint() {
     echo "Maybe something bad happened. Please check if geth is still running"
+    trap - SIGINT # clear the trap
+    kill -- -$$ # Sends SIGTERM to child/sub processes
     exit 1
 }
 
