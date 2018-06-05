@@ -41,7 +41,7 @@ start_benchmark() {
     extra_option=$(eval echo $extra_option)
     
     
-    timeout $TEST_TIMEOUT ./geth_with_catch \
+    timeout $TEST_TIMEOUT ./geth_with_catch.sh \
         "$DATADIR" \
         "$KEYSTORE" \
         "$PORT" \
