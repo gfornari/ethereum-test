@@ -124,6 +124,7 @@ main() {
     local readonly CONF_FILE=$1
     # local readonly ENODE_ADDRESS=$(start_bootnode)
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
+    local readonly TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
 
     printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
 
@@ -176,9 +177,10 @@ main() {
         address=$(jq -r ".address" $tmp_file)
         role=$(jq -r ".role" $tmp_file)
         internal_address=$(jq -r ".internal_address" $tmp_file)
-        timeout=$(jq -r ".timeout" $tmp_file)
         
-        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$timeout"
+        printf "$timeout"
+        
+        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK"
         
         start_id=$((start_id+num_client))
         
