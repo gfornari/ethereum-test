@@ -47,7 +47,7 @@ start_benchmark() {
          "$PORT" \
          "$RPCPORT" \
          "$RPCADDR" \
-         "$RPCCORSDOMAIN" \
+         "\"$RPCCORSDOMAIN\"" \
          "$RPCAPI" \
          "$NETWORKID" \
          "$BOOTNODES" \
