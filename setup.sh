@@ -175,8 +175,9 @@ main() {
         address=$(jq -r ".address" $tmp_file)
         role=$(jq -r ".role" $tmp_file)
         internal_address=$(jq -r ".internal_address" $tmp_file)
+        timeout=$(jq -r ".timeout" $tmp_file)
         
-        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address"
+        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$timeout"
         
         start_id=$((start_id+num_client))
         

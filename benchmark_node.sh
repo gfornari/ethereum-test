@@ -12,6 +12,7 @@ start_benchmark() {
     RPCPORT=$4
     RPCADDR=$5
     BOOTNODES=$6
+    TEST_TIMEOUT=$7
     
     ETHASH_DIR="$HOME/ethash"
     ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
@@ -37,9 +38,8 @@ start_benchmark() {
     fi
     extra_option=$(eval echo $extra_option)
     
-    test_time="300s"
     
-    nohup timeout -s SIGINT $test_time geth \
+    timeout -s SIGINT $TEST_TIMEOUT nohup geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
