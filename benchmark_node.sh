@@ -41,23 +41,20 @@ start_benchmark() {
     extra_option=$(eval echo $extra_option)
     
     
-    timeout $TEST_TIMEOUT geth \
-        --datadir "$DATADIR" \
-        --keystore "$KEYSTORE" \
-        --ipcdisable \
-        --port "$PORT" \
-        --rpc \
-        --rpcport "$RPCPORT" \
-        --rpcaddr "$RPCADDR" \
-        --rpccorsdomain "$RPCCORSDOMAIN" \
-        --rpcapi "$RPCAPI" \
-        --networkid "$NETWORKID" \
-        --bootnodes "$BOOTNODES" \
-        --metrics \
-        --ethash.cachedir "$ETHASH_CACHE_DIR" \
-        --ethash.dagdir "$ETHASH_DAG_DIR" \
-        --cpuprofile "geth.cpu" \
-        $extra_option \
+    timeout $TEST_TIMEOUT ./geth_with_catch.sh \
+         "$DATADIR" \
+         "$KEYSTORE" \
+         "$PORT" \
+         "$RPCPORT" \
+         "$RPCADDR" \
+         "$RPCCORSDOMAIN" \
+         "$RPCAPI" \
+         "$NETWORKID" \
+         "$BOOTNODES" \
+         "$ETHASH_CACHE_DIR" \
+         "$ETHASH_DAG_DIR" \
+         "geth.cpu" \
+         "$extra_option" \
         >> $OUTPUT_FILE 2>&1 &
     
     ppid=$!
