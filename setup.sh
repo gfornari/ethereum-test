@@ -28,6 +28,9 @@ start_benchmark() {
     local num_client=$3
     local start_id=$4
     local bootnode_address=$5
+    local internal_address=$6
+
+    
     
     
     printf "\n\nstart machine $login_name@$address\n"
@@ -42,7 +45,7 @@ start_benchmark() {
         cmd="\
         cd $REPO_OUTPUT_DIR;\
         chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT $role $start_id $address $bootnode_address"
+        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address"
        
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
