@@ -174,9 +174,9 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         role=$(jq -r ".role" $tmp_file)
+        internal_address=$(jq -r ".internal_address" $tmp_file)
         
-        
-        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
+        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address"
         
         start_id=$((start_id+num_client))
         
