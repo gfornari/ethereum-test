@@ -74,7 +74,7 @@ start_benchmark() {
     
     touch "cpu.csv"
     
-    nohup timeout $TEST_TIMEOUT ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    nohup timeout $TEST_TIMEOUT ./cpu_mem_info.sh "$pid" "cpu.csv" > /dev/null &
     
     
     
