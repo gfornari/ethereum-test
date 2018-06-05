@@ -117,9 +117,9 @@ main() {
     apt-get_install "jq" "jq --help" "jq"
     
     go get -d github.com/ethereum/go-ethereum
-    go install github.com/ethereum/go-ethereum/cmd/geth
-    
-    
+    go install github.com/ethereum/go-ethereum/cmd/geth 
+    sudo ln -s /home/mirko/go_path/bin/geth /bin/
+
     printf "Done. All dependencies are now installed ...\n"
 }
 
