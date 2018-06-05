@@ -12,7 +12,7 @@ start_benchmark() {
     RPCPORT=$4
     RPCADDR=$5
     BOOTNODES=$6
-    TEST_TIMEOUT=$7
+    
     
     ETHASH_DIR="$HOME/ethash"
     ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
@@ -27,6 +27,7 @@ start_benchmark() {
     JS_SCRIPT_PATH=$7
     OUTPUT_FILE=$8
     ROLE=$9
+    TEST_TIMEOUT=$10
     
     extra_option="" 
     
@@ -39,7 +40,7 @@ start_benchmark() {
     extra_option=$(eval echo $extra_option)
     
     
-    nohup timeout -s SIGINT $TEST_TIMEOUT geth \
+    timeout $TEST_TIMEOUT geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
