@@ -97,6 +97,7 @@ main() {
     FIRST_NODE_INDEX=$2
     RCPADDR=$3
     BOOTNODES=$4
+    TIMEOUT_INTERVAL=$5
     
     
     BASE_DATADIR="ethtest-datadir-"
@@ -127,7 +128,8 @@ main() {
         "$BOOTNODES" \
         "$JS_SCRIPT_PATH" \
         "$OUTPUT_FILE" \
-        "$ROLE"
+        "$ROLE" \
+        "$TIMEOUT_INTERVAL"
     
     printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
 }

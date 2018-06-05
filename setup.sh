@@ -29,6 +29,7 @@ start_benchmark() {
     local start_id=$4
     local bootnode_address=$5
     local internal_address=$6
+    local timeout_interval=$7
 
     
     
@@ -38,14 +39,14 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address"
+        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address" "timeout_interval"
         echo $cmd | bash -s 
     else
        
         cmd="\
         cd $REPO_OUTPUT_DIR;\
         chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address"
+        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address" "$timeout_interval"
        
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
