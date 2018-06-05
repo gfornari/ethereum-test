@@ -47,7 +47,6 @@ main() {
         --metrics \
         --ethash.cachedir "${10}" \
         --ethash.dagdir "${11}" \
-        --cpuprofile "${12}" \
         ${13}
 
 }
