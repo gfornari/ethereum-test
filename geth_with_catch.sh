@@ -11,7 +11,7 @@ catch() {
 
     # Do other useful stuffs, e.g. upload stats to central server and so on
     trap - SIGTERM # clear the trap
-    kill -- -$$ # Sends SIGTERM to child/sub processes
+    kill -s SIGINT -- -$$ # Sends SIGTERM to child/sub processes
     exit 0
 }
 
