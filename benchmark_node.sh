@@ -39,7 +39,7 @@ start_benchmark() {
     
     test_time="300s"
     
-    timeout -s SIGINT $test_time nohup geth \
+    nohup timeout -s SIGINT $test_time geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
@@ -73,7 +73,7 @@ start_benchmark() {
     
     touch "cpu.csv"
     
-    timeout $test_time nohup ./cpu_mem_info.sh "$pid" "cpu.csv" &
+    nohup timeout $test_time ./cpu_mem_info.sh "$pid" "cpu.csv" &
     
     
     
