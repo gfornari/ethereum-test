@@ -7,7 +7,7 @@ readonly ARGS="$@"
 
 catch() {
     echo "foo"
-    geth --exec "debug.metrics(false)" attach http://$1:$2
+    geth --exec "debug.metrics(false)" attach http://$1:$2 > metrics.txt
 
     sleep 10
     pkill geth
