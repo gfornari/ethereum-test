@@ -42,7 +42,7 @@ start_node_bg() {
     NETWORKID=$2
     PORT=$3
     RPCPORT=$4
-    RPCADDR=0.0.0.0
+    RPCADDR=$5
     BOOTNODES=$6
     
     ETHASH_DIR="$HOME/ethash"

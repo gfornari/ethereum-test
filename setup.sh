@@ -55,6 +55,7 @@ setup_machine() {
     local num_client=$3
     local start_id=$4
     local bootnode_address=$5
+    local internal_address=$6
 
     
     
@@ -73,7 +74,7 @@ setup_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+    $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$internal_address\" \"$bootnode_address\";"
     
     
     
@@ -136,9 +137,10 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         role=$(jq -r ".role" $tmp_file)
+        internal_address=$(jq -r ".internal_address" $tmp_file)
         
         
-        setup_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS"
+        setup_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address"
         
         start_id=$((start_id+num_client))
         
