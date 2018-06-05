@@ -16,6 +16,10 @@ catch() {
     exit 0
 }
 
+catch_sigint() {
+    echo "Maybe something bad happened. Please check if geth is still running"
+    exit 1
+}
 
 
 
@@ -23,7 +27,7 @@ catch() {
 main() {
 
     trap "catch $5 $4" SIGTERM
-   # trap "catch $5 $4" SIGINT
+    trap "catch_sigint $5 $4" SIGINT
 
     echo $ARGS
 
