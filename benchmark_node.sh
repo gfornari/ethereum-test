@@ -39,7 +39,7 @@ start_benchmark() {
     extra_option=$(eval echo $extra_option)
     
     
-    timeout -s SIGINT $TEST_TIMEOUT nohup geth \
+    nohup timeout -s SIGINT $TEST_TIMEOUT geth \
         --datadir "$DATADIR" \
         --keystore "$KEYSTORE" \
         --ipcdisable \
