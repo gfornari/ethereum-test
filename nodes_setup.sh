@@ -110,7 +110,7 @@ main() {
 
     # build datadir and output file string
     DATADIR=$BASE_DATADIR$node
-    OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
+    OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node.out"
     JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
 
     # remove eventual preexisting directory
