@@ -49,7 +49,7 @@ start_benchmark() {
          "$RPCADDR" \
          "$RPCCORSDOMAIN" \
          "$RPCAPI" \
-         "$NETWORKID" \
+         $NETWORKID \
          "$BOOTNODES" \
          "$ETHASH_CACHE_DIR" \
          "$ETHASH_DAG_DIR" \
