@@ -99,7 +99,8 @@ main() {
     BOOTNODES=$4
     TIMEOUT_INTERVAL=$5
 
-    printf "TIMEOUT_INTERVAL $TIMEOUT_INTERVAL ..."
+    printf "TIMEOUT_INTERVAL $TIMEOUT_INTERVAL ...\n"
+
     
     
     BASE_DATADIR="ethtest-datadir-"
