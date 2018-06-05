@@ -40,7 +40,7 @@ start_benchmark() {
     fi
     extra_option=$(eval echo $extra_option)
     
-    
+    echo $NETWORKID
     timeout $TEST_TIMEOUT ./geth_with_catch.sh \
          "$DATADIR" \
          "$KEYSTORE" \
@@ -49,7 +49,7 @@ start_benchmark() {
          "$RPCADDR" \
          "$RPCCORSDOMAIN" \
          "$RPCAPI" \
-         $NETWORKID \
+         "$NETWORKID" \
          "$BOOTNODES" \
          "$ETHASH_CACHE_DIR" \
          "$ETHASH_DAG_DIR" \
