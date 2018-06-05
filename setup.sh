@@ -117,7 +117,9 @@ main() {
     fi
 
     local readonly CONF_FILE=$1
-    local readonly ENODE_ADDRESS=$(start_bootnode)
+    # local readonly ENODE_ADDRESS=$(start_bootnode)
+    local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
+
     printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
 
     #FOR_EACH COMPUTER IN TEST_CONF
