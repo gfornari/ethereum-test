@@ -9,9 +9,6 @@ catch() {
     echo "foo"
     geth --exec "debug.metrics(false)" attach http://$1:$2 > metrics.txt
 
-    sleep 10
-    pkill geth
-
     # Do other useful stuffs, e.g. upload stats to central server and so on
     trap - SIGTERM # clear the trap
     kill -- -$$ # Sends SIGTERM to child/sub processes
