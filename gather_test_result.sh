@@ -47,7 +47,7 @@ main() {
         address=$(jq -r ".address" $tmp_file)
         
         
-        gather_info "$login_name" "$address" "./ethereum-test/"
+        gather_info "$login_name" "$address" "./ethereum-test/test"
         
         start_id=$((start_id+num_client))
         
