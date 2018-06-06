@@ -13,6 +13,7 @@ catch() {
     trap - SIGUSR1 # clear the trap
     # Sends SIGNAL to child/sub processes
     pkill geth
+    pkill cpu_mem_info.sh
     printf "Done ..."
     exit 0
 }
@@ -20,6 +21,17 @@ catch() {
 main() {
     trap "catch ${12} ${10}" SIGUSR1
     geth $ARGS &
+    
+    pid=$!
+    
+    chmod +x cpu_mem_info.sh
+    
+    rm "cpu.csv"
+    
+    touch "cpu.csv"
+    
+    ./cpu_mem_info.sh "$pid" "cpu.csv"
+    
     sleep 100000
 }
 

@@ -60,22 +60,6 @@ start_benchmark() {
         $extra_option \
         >> $OUTPUT_FILE 2>&1 &
     
-    ppid=$!
-    
-    # Let's wait for the spawning of the subprocess
-    sleep 0.5
-    
-    pid=$(ps -o pid= --ppid $ppid)
-    
-    echo "The PID of the program is $pid"
-    
-    chmod +x cpu_mem_info.sh
-    
-    rm "cpu.csv"
-    
-    touch "cpu.csv"
-    
-    nohup timeout $TEST_TIMEOUT ./cpu_mem_info.sh "$pid" "cpu.csv" > /dev/null 2>&1 &
     
     
     
