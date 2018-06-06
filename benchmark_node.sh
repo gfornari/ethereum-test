@@ -20,7 +20,7 @@ start_benchmark() {
     
     
     KEYSTORE="keystore"
-    RPCCORSDOMAIN="*"
+    RPCCORSDOMAIN="\"*\""
     RPCAPI="eth,web3,miner,net,admin,personal,debug"
     
 
@@ -42,19 +42,22 @@ start_benchmark() {
     
     echo "$NETWORKID"
     nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
-         "$DATADIR" \
-         "$KEYSTORE" \
-         "$PORT" \
-         "$RPCPORT" \
-         "$RPCADDR" \
-         "\"$RPCCORSDOMAIN\"" \
-         "$RPCAPI" \
-         "$NETWORKID" \
-         "$BOOTNODES" \
-         "$ETHASH_CACHE_DIR" \
-         "$ETHASH_DAG_DIR" \
-         "geth.cpu" \
-         "$extra_option" \
+        --datadir "$DATADIR" \
+        --keystore "$KEYSTORE" \
+        --ipcdisable \
+        --port "$PORT" \
+        --rpc \
+        --rpcport "$RPCPORT" \
+        --rpcaddr "$RPCADDR" \
+        --rpccorsdomain "$RPCCORSDOMAIN" \
+        --rpcapi "$RPCAPI" \
+        --networkid "$NETWORKID" \
+        --bootnodes "$BOOTNODES" \
+        --metrics \
+        --ethash.cachedir "$ETHASH_CACHE_DIR" \
+        --ethash.dagdir "$ETHASH_DAG_DIR" \
+        --cpuprofile "geth.cpu" \
+        $extra_option \
         >> $OUTPUT_FILE 2>&1 &
     
     ppid=$!

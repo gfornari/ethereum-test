@@ -6,51 +6,23 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 catch() {
-    echo "foo"
+    printf "Dump metrics to metrics.txt\n"
+    printf "RPC: http://$1:$2\n"
+    
     geth --exec "debug.metrics(false)" attach http://$1:$2 > metrics.txt
-
     # Do other useful stuffs, e.g. upload stats to central server and so on
-    trap - SIGTERM # clear the trap
-    trap - SIGINT
-    kill -s SIGINT -- -$$ # Sends SIGNAL to child/sub processes
+    trap - SIGUSR1 # clear the trap
+    # Sends SIGNAL to child/sub processes
+    pkill geth
+    printf "Done ..."
     exit 0
 }
 
-catch_sigint() {
-    echo "Maybe something bad happened. Please check if geth is still running"
-    trap - SIGINT # clear the trap
-    kill -- -$$ # Sends SIGTERM to child/sub processes
-    exit 1
-}
-
-
-
-
 main() {
-
-    trap "catch $5 $4" SIGTERM
-    trap "catch_sigint $5 $4" SIGINT
-
+    trap "catch ${12} ${10}" SIGUSR1
     echo $ARGS
-
-    geth \
-        --datadir "$1" \
-        --keystore "$2" \
-        --ipcdisable \
-        --port "$3" \
-        --rpc \
-        --rpcport "$4" \
-        --rpcaddr "$5" \
-        --rpccorsdomain "$6" \
-        --rpcapi "$7" \
-        --networkid "$8" \
-        --bootnodes "$9" \
-        --metrics \
-        --gcmode "archive"
-        --ethash.cachedir "${10}" \
-        --ethash.dagdir "${11}" \
-        ${13}
-
+    (trap "" SIGUSR1; geth $ARGS &)
+    sleep 100000
 }
 
 main $ARGS
