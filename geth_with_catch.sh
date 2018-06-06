@@ -14,7 +14,7 @@ catch() {
     geth --exec "tx_count=0; \
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
-                tx_count" \
+                tx_count;" \
                 attach http://$1:$2 > transactions.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
