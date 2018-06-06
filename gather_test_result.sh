@@ -22,7 +22,7 @@ gather_info() {
     local result_path=$3 # Path to the result test relative to home dir
     
     mkdir -p test/$address
-    scp -r $login_name@$address:$result_path test/$address/
+    scp -r $login_name@$address:$result_path/* test/$address/
 }
 
 main() { 
