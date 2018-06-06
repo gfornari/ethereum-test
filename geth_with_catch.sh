@@ -18,7 +18,7 @@ catch() {
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
-    pkill geth
+    pkill -HUP geth
     pkill cpu_mem_info.sh
     trap - SIGUSR1 # clear the trap
     printf "Done ..."
