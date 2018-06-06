@@ -5,6 +5,7 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
+
 catch() {
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
@@ -36,11 +37,11 @@ main() {
     
     chmod +x cpu_mem_info.sh
     
-    rm "cpu.csv"
+    rm "test/cpu.csv"
     
-    touch "cpu.csv"
+    touch "test/cpu.csv"
     
-    ./cpu_mem_info.sh "$pid" "cpu.csv"
+    ./cpu_mem_info.sh "$pid" "test/cpu.csv"
     
     sleep 100000
 }
