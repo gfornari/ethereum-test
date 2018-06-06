@@ -10,12 +10,12 @@ catch() {
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
     geth --exec "debug.metrics(true)" attach http://$1:$2 > test/metrics.txt
-    geth --exec "eth.blockNumber" attach http://$1:$2 > test/eth.txt
+    geth --exec "eth.blockNumber" attach http://$1:$2 > test/block_number.txt
     geth --exec "tx_count=0; \
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count" \
-                attach http://$1:$2 >> eth.txt
+                attach http://$1:$2 > transactions.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes

@@ -40,7 +40,7 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$address" "$bootnode_address" "$timeout_interval" "$tx_interval"
+        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$internal_address" "$bootnode_address" "$timeout_interval" "$tx_interval"
         echo $cmd | bash -s 
     else
        
@@ -125,7 +125,9 @@ main() {
     local readonly CONF_FILE=$1
     # local readonly ENODE_ADDRESS=$(start_bootnode)
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
-    local readonly TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
+    local readonly RAW_TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
+    local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
+    
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
     
 
@@ -164,7 +166,7 @@ main() {
     ###
     
     
-    printf "Setup complete. \n\n\n\n\n\n\n\n\n\n\n\n"
+    printf "Setup complete. \n\n"
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
     local start_node_id=0
@@ -191,8 +193,19 @@ main() {
     done
     #END FOR_EACH
 
-    echo "done.."
+    echo "Benchmark started.."
     
+    TIMEOUT_BENCHMARK_SLEEP=$((RAW_TIMEOUT_BENCHMARK+30))
+    
+    printf "Wait $TIMEOUT_BENCHMARK_SLEEP seconds, to collect results\n"
+
+    
+    sleep $TIMEOUT_BENCHMARK_SLEEP
+    
+    printf "Collect results\n"
+    
+    
+    ./gather_test_result.sh $CONF_FILE
 }
 
 main $ARGS
