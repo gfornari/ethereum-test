@@ -7,9 +7,9 @@ readonly ARGS="$@"
 
 catch() {
     printf "Dump metrics to metrics.txt\n"
-    
-    geth --exec "debug.metrics(true)" attach http://$1:$2 > metrics.txt
-    geth --exec "eth.blockNumber" attach http://$1:$2 > eth.txt
+    mkdir -p test
+    geth --exec "debug.metrics(true)" attach http://$1:$2 > test/metrics.txt
+    geth --exec "eth.blockNumber" attach http://$1:$2 > test/eth.txt
     geth --exec "tx_count=0; \
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
