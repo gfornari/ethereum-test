@@ -19,7 +19,7 @@ main() {
         timestamp=$(date +%s)
         out=$(ps -p $pid -o %cpu,%mem --no-header)
         out_array=($out)
-        tmp_out=$(top -b -n 1 -p $pid | tail -1)
+        tmp_out=$(top -b -n 1 -p $pid)
         tmp_out_array=($tmp_out)
         echo "$timestamp; ${out_array[0]}; ${out_array[1]}; \
         ${tmp_out_array[8]}; ${tmp_out_array[9]}" >> $output_file
