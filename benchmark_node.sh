@@ -22,11 +22,11 @@ start_benchmark() {
     local readonly ETHASH_DAG_DIR="$ETHASH_DIR/dag"
 
 
-    extra_option="" 
+    local extra_option="" 
     
-    printf "My role is $ROLE"
-    if [[ $ROLE = "miner" ]]; then
-        printf "$ROLE is miner..."
+    printf "My role is $ROLE == miner?\n"
+    if [ "$ROLE" = "miner" ]; then
+        printf "$ROLE is miner...\n"
         extra_option="--mine --minerthreads 1"
     else
         extra_option="js $JS_SCRIPT_PATH"
