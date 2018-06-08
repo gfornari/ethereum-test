@@ -71,7 +71,7 @@ setup_machine() {
     
     
     
-    if [[ "$address" == "$IP_ADDRESS" ]]; then
+    if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
         $NODES_SETUP_SCRIPT \"$role_list\";"
