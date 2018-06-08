@@ -41,14 +41,14 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        "$BENCHMARK_SCRIPT" "'$role_list'" "$start_id" "$internal_address" "$bootnode_address" "$timeout_interval" "$tx_interval"
+        cmd="$BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
         echo $cmd | bash -s 
     else
        
         cmd="\
         cd $REPO_OUTPUT_DIR;\
         chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT \"'$role_list'\" \"$start_id\" \"$internal_address\" \"$bootnode_address\" \"$timeout_interval\" \"$tx_interval\""
+        $BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
        
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
@@ -115,6 +115,14 @@ main() {
     fi
 
     local readonly CONF_FILE=$1
+
+    # Check if the configuration file is a valid json...
+    cat $CONF_FILE | jq "." 2> /dev/null > /dev/null
+    if [[ "$?" -ne "0" ]]; then
+        printf "The configuration file $CONF_FILE is not a valid json\n"
+        exit 1;
+    fi
+
     # local readonly ENODE_ADDRESS=$(start_bootnode)
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
     local readonly EXTRA_TIMEOUT=$(jq -r ".extra_timeout" $CONF_FILE)
