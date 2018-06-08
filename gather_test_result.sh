@@ -46,9 +46,9 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         
-        
-        gather_info "$login_name" "$address" "./ethereum-test/test"
-        
+        if [[ "$address" != "127.0.0.1" ]]; then
+            gather_info "$login_name" "$address" "./ethereum-test/test"
+        fi
         start_id=$((start_id+num_client))
         
         computer_id=$((computer_id+1))

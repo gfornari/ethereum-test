@@ -71,8 +71,9 @@ main() {
         printf "Usage: `basename "$0"` <role_list>\n"
         exit 1
     fi
-    
+  
     local readonly ROLE_LIST=$1
+    printf "$ROLE_LIST\n"
     local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
     local readonly BASE_ETHASH_DIR="$HOME/ethash"

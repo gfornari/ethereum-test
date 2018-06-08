@@ -24,14 +24,14 @@ start_benchmark() {
     
     
     
-    local login_name=$1
-    local address=$2
-    local role=$3
-    local start_id=$4
-    local bootnode_address=$5
-    local internal_address=$6
-    local timeout_interval=$7
-    local tx_interval=$8
+    local readonly login_name=$1
+    local readonly address=$2
+    local readonly role=$3
+    local readonly start_id=$4
+    local readonly bootnode_address=$5
+    local readonly internal_address=$6
+    local readonly timeout_interval=$7
+    local readonly tx_interval=$8
 
     
     
@@ -56,9 +56,11 @@ start_benchmark() {
 }
 
 setup_machine() {
-    local login_name=$1
-    local address=$2
-    local role_list=$3
+    local readonly login_name=$1
+    local readonly address=$2
+    local readonly role_list=$3
+
+    printf "\n\n\nROLE LIST=$role_list\n\n\n"
 
     cmd="\
     if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
@@ -67,14 +69,16 @@ setup_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT \"$role_list\";"
+    $NODES_SETUP_SCRIPT '$role_list';"
     
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
-        $NODES_SETUP_SCRIPT \"$role_list\";"
+        git pull;\
+        $NODES_SETUP_SCRIPT '$role_list';"
+        printf "$cmd\n\n"
         echo $cmd | bash -s 
     else
         echo $cmd | ssh "$login_name@$address" "bash -s"
@@ -113,6 +117,7 @@ main() {
     local readonly CONF_FILE=$1
     # local readonly ENODE_ADDRESS=$(start_bootnode)
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
+    local readonly EXTRA_TIMEOUT=$(jq -r ".extra_timeout" $CONF_FILE)
     local readonly RAW_TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
     local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
@@ -138,7 +143,8 @@ main() {
         local readonly login_name=$(jq -r ".login_name" $tmp_file)
         local readonly address=$(jq -r ".address" $tmp_file)
         # Compact output, get rid of spaces!
-        local readonly role_list=$(jq -r -c ".roles" $tmp_file)
+        local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
+        printf "$role_list"
        
         setup_machine "$login_name" "$address" "$role_list"
         
@@ -148,6 +154,7 @@ main() {
 
     printf "Setup done ..\n"
     
+
     #
     # Start the benchmark
     #
@@ -165,7 +172,7 @@ main() {
         echo $COMPUTER > $tmp_file
         local readonly login_name=$(jq -r ".login_name" $tmp_file)
         local readonly address=$(jq -r ".address" $tmp_file)
-        local readonly role_list=$(jq -r ".roles" $tmp_file)
+        local readonly role_list=$(jq -r -c ".roles" $tmp_file)
         
         start_benchmark "$login_name" "$address" "$role_list" "$START_NODE_ID" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
         
@@ -177,7 +184,7 @@ main() {
 
     echo "Benchmark started.."
     
-    TIMEOUT_BENCHMARK_SLEEP=$((RAW_TIMEOUT_BENCHMARK+30))
+    TIMEOUT_BENCHMARK_SLEEP=$((${RAW_TIMEOUT_BENCHMARK} + ${EXTRA_TIMEOUT}))
     
     printf "Wait $TIMEOUT_BENCHMARK_SLEEP seconds, to collect results\n"
 
