@@ -18,7 +18,7 @@ catch() {
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count;" \
-                attach ipc://$IPC_PATH > transactions-$ID.txt
+                attach ipc://$IPC_PATH > test/transactions-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
