@@ -1,6 +1,7 @@
 {
     "timeout": "50",
     "tx_interval": "1000",
+    "bootnode": "enode://752a5c8332ac60de44b4bb6b536eaa7d2007eb865d0408accd81b1ae1d022f59b93cd99749b878f41404ec7a9cdb3dd49d7951ee04570fe3b625c6aa95e29fd5@127.0.0.1:2999",
     "nodes": 
     [
         {
