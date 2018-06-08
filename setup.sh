@@ -26,7 +26,7 @@ start_benchmark() {
     
     local readonly login_name=$1
     local readonly address=$2
-    local readonly role=$3
+    local readonly role_list=$3
     local readonly start_id=$4
     local readonly bootnode_address=$5
     local readonly internal_address=$6
@@ -41,14 +41,14 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        "$BENCHMARK_SCRIPT" "$role" "$start_id" "$internal_address" "$bootnode_address" "$timeout_interval" "$tx_interval"
+        "$BENCHMARK_SCRIPT" "$role_list" "$start_id" "$internal_address" "$bootnode_address" "$timeout_interval" "$tx_interval"
         echo $cmd | bash -s 
     else
        
         cmd="\
         cd $REPO_OUTPUT_DIR;\
         chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT $role $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
+        $BENCHMARK_SCRIPT $role_list $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
        
         echo $cmd | ssh "$login_name@$address" "bash -s"
     fi
@@ -173,10 +173,11 @@ main() {
         local readonly login_name=$(jq -r ".login_name" $tmp_file)
         local readonly address=$(jq -r ".address" $tmp_file)
         local readonly role_list=$(jq -r -c ".roles" $tmp_file)
+        local readonly num_client=$(echo $role_list | jq "length")
         
         start_benchmark "$login_name" "$address" "$role_list" "$START_NODE_ID" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
         
-        start_id=$((start_id+num_client))
+        START_NODE_ID=$((START_NODE_ID+num_client))
         
         COMPUTER_ID=$((COMPUTER_ID+1))
     done

@@ -60,12 +60,12 @@ read_chainid() {
 main() { 
     # check arguments
     if [ $# -lt 5 ]; then
-        printf "Usage: `basename "$0"` <first-node-index> <role_list> <bootnodes> <timeout-interval> <tx-interval>\n"
+        printf "Usage: `basename "$0"` <role_list> <first-node-index> <bootnodes> <timeout-interval> <tx-interval>\n"
         exit 1
     fi
     
-    local readonly FIRST_NODE_INDEX=$1
-    local readonly ROLE_LIST="$2"
+    local readonly FIRST_NODE_INDEX=$2
+    local readonly ROLE_LIST="$1"
     local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
     local readonly BASE_ETHASH_DIR="$HOME/ethash"
