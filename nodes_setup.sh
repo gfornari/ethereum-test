@@ -53,7 +53,7 @@ generate_ethash_structs() {
 
     
     # Miner should generate also the DAG 
-    if [[ "$ROLE" = "miner" ]]; then
+    if [[ "$ROLE" = "\"miner\"" ]]; then
         printf "Generating the dag in $ETHASH_DAG_DIR."
         printf " This may take a while ...\n"
         geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
