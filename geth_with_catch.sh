@@ -9,13 +9,13 @@ readonly ARGS="$@"
 catch() {
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
-    geth --exec "debug.metrics(true)" attach http://$1:$2 > test/metrics.txt
-    geth --exec "eth.blockNumber" attach http://$1:$2 > test/block_number.txt
+    # geth --exec "debug.metrics(true)" attach ipc:$1 > test/metrics.txt
+    geth --exec "eth.blockNumber" attach ipc://$1 > test/block_number.txt
     geth --exec "tx_count=0; \
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count;" \
-                attach http://$1:$2 > transactions.txt
+                attach ipc://$1 > transactions.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
@@ -30,7 +30,7 @@ catch() {
 # geth --exec "eth.blockNumber; tx_count=0; for(i = 0; i < eth.blockNumber; i++) { tx_count += eth.getBlock(i).transactions.length;}; tx_count" attach http://10.14.67.157:8545 
 
 main() {
-    trap "catch ${12} ${10}" SIGUSR1
+    trap "catch $6" SIGUSR1
     geth $ARGS &
     
     pid=$!

@@ -13,7 +13,8 @@ readonly BENCHMARK_SCRIPT="./benchmark_node.sh"
 
 readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
 readonly REPO_OUTPUT_DIR="./ethereum-test"
-readonly BRANCH_NAME="benchmark"
+# https://stackoverflow.com/questions/1593051/how-to-programmatically-determine-the-current-checked-out-git-branch
+readonly BRANCH_NAME=$(git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3)
 
 #
 # Given the configuration information of a single machine executes the
@@ -25,7 +26,7 @@ start_benchmark() {
     
     local login_name=$1
     local address=$2
-    local num_client=$3
+    local role=$3
     local start_id=$4
     local bootnode_address=$5
     local internal_address=$6
@@ -57,21 +58,8 @@ start_benchmark() {
 setup_machine() {
     local login_name=$1
     local address=$2
-    local num_client=$3
-    local start_id=$4
-    local bootnode_address=$5
-    local internal_address=$6
+    local role_list=$3
 
-    
-    
-   
-    # This command will: 
-    # 1. Check if the repo exists. If it is not the case, it will 
-    # clone it.
-    # 2. Cd in the right directory checkout in the right directory
-    # 3. Checkout the right branch
-    # 4. Update the content of the repo
-    # 5. Call the NODES_SETUP_SCRIPT
     cmd="\
     if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
         git clone $GIT_REPOSITORY $REPO_OUTPUT_DIR;\
@@ -79,14 +67,14 @@ setup_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$internal_address\" \"$bootnode_address\";"
+    $NODES_SETUP_SCRIPT \"$role_list\";"
     
     
     
     if [[ "$address" == "$IP_ADDRESS" ]]; then
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
-        $NODES_SETUP_SCRIPT \"$role\" \"$start_id\" \"$address\" \"$bootnode_address\";"
+        $NODES_SETUP_SCRIPT \"$role_list\";"
         echo $cmd | bash -s 
     else
         echo $cmd | ssh "$login_name@$address" "bash -s"
@@ -127,69 +115,63 @@ main() {
     local readonly ENODE_ADDRESS=$(jq ".bootnode" $CONF_FILE)
     local readonly RAW_TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
     local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
-    
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
     
 
-    printf "Started bootnode with address: $ENODE_ADDRESS ...\n"
+    printf "The bootnode address is: $ENODE_ADDRESS ...\n"
 
+    #
+    # Configure all the machines
+    #
     #FOR_EACH COMPUTER IN TEST_CONF
-    local computer_id=0
-    local start_node_id=0
-    local computer=""
+    local COMPUTER_ID=0
+    local START_NODE_ID=0
+    local COMPUTER=""
     while [ true ]; do
-        computer=$(jq -r ".nodes[$computer_id]" $CONF_FILE)
-        if [ "$computer" == "null" ]; then
+        COMPUTER=$(jq -r ".nodes[$COMPUTER_ID]" $CONF_FILE)
+        if [ "$COMPUTER" == "null" ]; then
             break;
         fi
         tmp_file=/tmp/tmp.json
-        echo $computer > $tmp_file
-        login_name=$(jq -r ".login_name" $tmp_file)
-        address=$(jq -r ".address" $tmp_file)
-        role=$(jq -r ".role" $tmp_file)
-        internal_address=$(jq -r ".internal_address" $tmp_file)
         
+        echo $COMPUTER > $tmp_file
+        local readonly login_name=$(jq -r ".login_name" $tmp_file)
+        local readonly address=$(jq -r ".address" $tmp_file)
+        # Compact output, get rid of spaces!
+        local readonly role_list=$(jq -r -c ".roles" $tmp_file)
+       
+        setup_machine "$login_name" "$address" "$role_list"
         
-        setup_machine "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address"
-        
-        start_id=$((start_id+num_client))
-        
-        computer_id=$((computer_id+1))
+        COMPUTER_ID=$((COMPUTER_ID+1))
     done
     #END FOR_EACH
 
-    echo "Setup done .."
+    printf "Setup done ..\n"
     
-    ####
-    # Benchmark
     #
-    ###
-    
-    
-    printf "Setup complete. \n\n"
+    # Start the benchmark
+    #
+    printf "Starting benchmark ..."
     #FOR_EACH COMPUTER IN TEST_CONF
-    local computer_id=0
-    local start_node_id=0
-    local computer=""
+    local COMPUTER_ID=0
+    local START_NODE_ID=0
+    local COMPUTER=""
     while [ true ]; do
-        computer=$(jq -r ".nodes[$computer_id]" $CONF_FILE)
-        if [ "$computer" == "null" ]; then
+        COMPUTER=$(jq -r ".nodes[$COMPUTER_ID]" $CONF_FILE)
+        if [ "$COMPUTER" == "null" ]; then
             break;
         fi
         tmp_file=/tmp/tmp.json
-        echo $computer > $tmp_file
-        login_name=$(jq -r ".login_name" $tmp_file)
-        address=$(jq -r ".address" $tmp_file)
-        role=$(jq -r ".role" $tmp_file)
-        internal_address=$(jq -r ".internal_address" $tmp_file)
+        echo $COMPUTER > $tmp_file
+        local readonly login_name=$(jq -r ".login_name" $tmp_file)
+        local readonly address=$(jq -r ".address" $tmp_file)
+        local readonly role_list=$(jq -r ".roles" $tmp_file)
         
-        printf "$timeout"
-        
-        start_benchmark "$login_name" "$address" "$role" "$start_node_id" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
+        start_benchmark "$login_name" "$address" "$role_list" "$START_NODE_ID" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
         
         start_id=$((start_id+num_client))
         
-        computer_id=$((computer_id+1))
+        COMPUTER_ID=$((COMPUTER_ID+1))
     done
     #END FOR_EACH
 

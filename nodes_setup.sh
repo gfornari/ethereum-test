@@ -6,8 +6,8 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 ask_yn() {
-    QUESTION=${1}
-    EXIT_ANSWER=${2:-Nn}
+    local readonly QUESTION=${1}
+    local readonly EXIT_ANSWER=${2:-Nn}
 
     read -p "$QUESTION " -n 1 -r
     echo    # move to a new line
@@ -17,7 +17,7 @@ ask_yn() {
 }
 
 check_dir() {
-    DIR=$1
+    local readonly DIR=$1
 
     if [ -d "$DIR" ]; then
         ask_yn "Directory $DIR already exists. Continue anyway?"
@@ -31,34 +31,19 @@ read_chainid() {
 }
 
 init_genesis() {
-    DATADIR=$1
-    OUTPUT_FILE=$2
+    local readonly DATADIR=$1
+    local readonly OUTPUT_FILE=$2
 
     geth init --datadir $DATADIR conf/genesis_block.json > $OUTPUT_FILE 2>&1
 }
 
-start_node_bg() {
-    DATADIR=$1
-    NETWORKID=$2
-    PORT=$3
-    RPCPORT=$4
-    RPCADDR=$5
-    BOOTNODES=$6
-    
-    ETHASH_DIR="$HOME/ethash"
-    ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
-    ETHASH_DAG_DIR="$ETHASH_DIR/dag"
-    
-    
-    KEYSTORE="keystore"
-    RPCCORSDOMAIN="*"
-    RPCAPI="eth,web3,miner,net,admin,personal,debug"
-    
 
-    JS_SCRIPT_PATH=$7
-    OUTPUT_FILE=$8
-    ROLE=$9
-    
+generate_ethash_structs() {
+    local readonly ROLE=$1
+    local readonly ETHASH_DIR=$2
+    local readonly ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
+    local readonly ETHASH_DAG_DIR="$ETHASH_DIR/dag"
+
 
     # Generate the ethash cache (both for miner and verifiers)
     printf "Generating the cache in $ETHASH_CACHE_DIR."
@@ -79,25 +64,21 @@ start_node_bg() {
 
 
 
-
-
 main() { 
 
     # check arguments
-    if [ $# -lt 4 ]; then
-        printf "Usage: `basename "$0"` <nodes-amount> <first-node-index> <rcpaddr> <bootnodes>\n"
+    if [ $# -lt 1 ]; then
+        printf "Usage: `basename "$0"` <role_list>\n"
         exit 1
     fi
-    node=0
-    ROLE=$1
-    FIRST_NODE_INDEX=$2
-    RCPADDR=$3
-    BOOTNODES=$4
     
+    local readonly ROLE_LIST=$1
+    local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
-    BASE_DATADIR="ethtest-datadir-"
-    OUTPUT_DIR="logs"
-    JS_SCRIPTS_DIR="js-scripts"
+    local readonly BASE_ETHASH_DIR="$HOME/ethash"
+    local readonly BASE_DATADIR="ethtest-datadir-"
+    local readonly OUTPUT_DIR="logs"
+    local readonly JS_SCRIPTS_DIR="js-scripts"
 
     # check if output dir already exists
     check_dir $OUTPUT_DIR
@@ -105,42 +86,29 @@ main() {
     # check if js scripts dir already exists
     check_dir $JS_SCRIPTS_DIR
 
-    
-    printf "Configuring node $node ...\n"
+    for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
+        # build datadir and output file string
+        local readonly DATADIR=$BASE_DATADIR$node
+        local readonly ETHASH_DIR=$BASE_ETHASH_DIR$node
+        local readonly OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node.out"
+        local readonly ROLE=$(echo $ROLE_LIST | jq ".[$node]")
 
-    # build datadir and output file string
-    DATADIR=$BASE_DATADIR$node
-    OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node.out"
-    JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
+        printf "Configuring node $node with role $ROLE...\n"
 
-    # remove eventual preexisting directory
-    rm -rf $DATADIR
+        
 
-    # init genesis block
-    init_genesis $DATADIR $OUTPUT_FILE
+        # remove eventual preexisting directory
+        rm -rf $DATADIR
 
-    # start geth node in background
-    NETWORKID=$(read_chainid)
-    PORT=$((30300 + $node))
-    RPCPORT=$((8545 + $node))
+        # init genesis block
+        init_genesis $DATADIR $OUTPUT_FILE
 
-    printf "conf = {};
-        conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
-        conf.txDelay = 1000;
-        " | cat - sendTransactions.js > $JS_SCRIPT_PATH
-
-    start_node_bg \
-        "$DATADIR" \
-        "$NETWORKID" \
-        "$PORT" \
-        "$RPCPORT" \
-        "$RCPADDR" \
-        "$BOOTNODES" \
-        "$JS_SCRIPT_PATH" \
-        "$OUTPUT_FILE" \
-        "$ROLE"
-    
-    printf "Node ($RCPADDR:$RPCPORT) started. Output in $OUTPUT_FILE\n"
+        generate_ethash_structs \
+            $ROLE \
+            $ETHASH_DIR > $OUTPUT_FILE
+    done
+        
+    # end for each
 }
 
 
