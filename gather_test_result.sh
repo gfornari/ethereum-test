@@ -32,6 +32,7 @@ main() {
     fi
     local readonly CONF_FILE=$1
     
+    printf "Gather results\n"
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
     local start_node_id=0
@@ -46,9 +47,8 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         
-        if [[ "$address" != "127.0.0.1" ]]; then
-            gather_info "$login_name" "$address" "./ethereum-test/test"
-        fi
+        gather_info "$login_name" "$address" "./ethereum-test/test"
+        
         start_id=$((start_id+num_client))
         
         computer_id=$((computer_id+1))

@@ -24,6 +24,7 @@ start_benchmark() {
 
     extra_option="" 
     
+    printf "My role is $ROLE"
     if [[ $ROLE = "miner" ]]; then
         printf "$ROLE is miner..."
         extra_option="--mine --minerthreads 1"
