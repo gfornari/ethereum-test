@@ -6,18 +6,18 @@ readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
 start_benchmark() {
-
-    local readonly DATADIR=$1
-    local readonly NETWORKID=$2
-    local readonly PORT=$3
-    local readonly IPC_PATH=$4
-    local readonly BOOTNODES=$5
+    local readonly NODE_ID=$1
+    local readonly DATADIR=$2
+    local readonly NETWORKID=$3
+    local readonly PORT=$4
+    local readonly IPC_PATH=$5
+    local readonly BOOTNODES=$6
     local readonly KEYSTORE="keystore"
-    local readonly JS_SCRIPT_PATH=$6
-    local readonly OUTPUT_FILE=$7
-    local readonly ROLE=$8
-    local readonly TEST_TIMEOUT=${9}
-    local readonly ETHASH_DIR=${10}
+    local readonly JS_SCRIPT_PATH=$7
+    local readonly OUTPUT_FILE=$8
+    local readonly ROLE=$9
+    local readonly TEST_TIMEOUT=${10}
+    local readonly ETHASH_DIR=${11}
     local readonly ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
     local readonly ETHASH_DAG_DIR="$ETHASH_DIR/dag"
 
@@ -31,20 +31,23 @@ start_benchmark() {
         extra_option="js $JS_SCRIPT_PATH"
     fi
     extra_option=$(eval echo $extra_option)
+
+    printf "Node $NODE_ID"
     
-    echo "$NETWORKID"
+    echo "$OUTPUT_FILE"
     nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
-        --datadir "$DATADIR" \
-        --keystore "$KEYSTORE" \
-        --ipcpath "$IPC_PATH" \
-        --port "$PORT" \
-        --networkid "$NETWORKID" \
-        --bootnodes "$BOOTNODES" \
-        --metrics \
-        --ethash.cachedir "$ETHASH_CACHE_DIR" \
-        --ethash.dagdir "$ETHASH_DAG_DIR" \
-        --cpuprofile "geth.cpu" \
-        $extra_option \
+        "$NODE_ID" \
+        "--datadir" "$DATADIR" \
+        "--keystore" "$KEYSTORE" \
+        "--ipcpath" "$IPC_PATH" \
+        "--port" "$PORT" \
+        "--networkid" "$NETWORKID" \
+        "--bootnodes" "$BOOTNODES" \
+        "--metrics" \
+        "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
+        "--ethash.dagdir" "$ETHASH_DAG_DIR" \
+        "--cpuprofile" "geth.cpu" \
+        "$extra_option" \
         >> $OUTPUT_FILE 2>&1 &
 }
 
@@ -98,6 +101,7 @@ main() {
             " | cat - sendTransactions.js > "$JS_SCRIPT_PATH"
 
         start_benchmark \
+            "$node" \
             "$DATADIR" \
             "$NETWORKID" \
             "$PORT" \

@@ -1,11 +1,12 @@
 {
-    "my_ip": "127.0.0.1",
+    "timeout": "50",
+    "tx_interval": "1000",
     "nodes": 
     [
         {
             "address": "127.0.0.1",
             "login_name": "",
-            "client_number": 5
+            "roles": ["client"]
         }
     ]
 }
