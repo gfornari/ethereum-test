@@ -13,12 +13,12 @@ catch() {
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
     # geth --exec "debug.metrics(true)" attach ipc:$1 > test/metrics.txt
-    geth --exec "eth.blockNumber" attach ipc://$IPC_PATH > test/block_number-$ID.txt
+    geth --exec "eth.blockNumber" attach ipc://$IPC_PATH >> test/block_number-$ID.txt
     geth --exec "tx_count=0; \
                 for(i = 0; i < eth.blockNumber; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count;" \
-                attach ipc://$IPC_PATH > test/transactions-$ID.txt
+                attach ipc://$IPC_PATH >> test/transactions-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
@@ -38,24 +38,19 @@ main() {
     shift # Forget about the first argument
     local GETH_ARGS="$@"
 
-    
-
-    printf "$ID \n $IPC_PATH\n"
-
     trap "catch $ID $IPC_PATH" SIGUSR1
-
     
     geth $GETH_ARGS &
     
-    local readonly pid=$!
+    # local readonly pid=$!
     
-    chmod +x cpu_mem_info.sh
+    # chmod +x cpu_mem_info.sh
     
-    rm "test/cpu.csv"
+    # rm "test/cpu.csv"
     
-    touch "test/cpu.csv"
+    # touch "test/cpu.csv"
     
-    ./cpu_mem_info.sh "$pid" "test/cpu.csv"
+    # ./cpu_mem_info.sh "$pid" "test/cpu.csv"
     
     sleep 100000
 }
