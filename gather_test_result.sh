@@ -25,14 +25,36 @@ gather_info() {
     scp -r $login_name@$address:$result_path/* test/$address/
 }
 
+remove_old_results() {
+    local login_name=$1
+    local address=$2
+    local result_path=$3
+
+    cmd="rm -rf $result_path/*"
+    echo $cmd | ssh "$login_name@$address" "bash -s"
+}
+
 main() { 
-    if [[ "$#" -lt "1" ]]; then
-        printf "Usage %s <conf-file>\n" $0
+    if [[ "$#" -lt "2" ]]; then
+        printf "Usage %s <conf-file> <clean|gather>\n" $0
         exit 1;
     fi
     local readonly CONF_FILE=$1
+    local readonly COMMAND=$2
+
+    local FUNCTION=""
+    local MESSAGE=""
+    if [[ "$COMMAND" == "clean" ]]; then
+        FUNCTION=remove_old_results
+    elif [[ "$COMMAND" == "gather" ]]; then
+        FUNCTION=gather_info
+    else
+        printf "The inserted command is not supported"
+        exit 1;
+    fi
     
-    printf "Gather results\n"
+    printf "Let's execute $COMMAND\n"
+
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
     local start_node_id=0
@@ -47,7 +69,7 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         
-        gather_info "$login_name" "$address" "./ethereum-test/test"
+        $FUNCTION "$login_name" "$address" "./ethereum-test/test"
         
         start_id=$((start_id+num_client))
         
