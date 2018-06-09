@@ -200,10 +200,6 @@ main() {
     
     sleep $TIMEOUT_BENCHMARK_SLEEP
     
-    printf "Collect results\n"
-    
-    
-    ./gather_test_result.sh $CONF_FILE
 }
 
 main $ARGS
