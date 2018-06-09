@@ -43,15 +43,8 @@ main() {
     local readonly PID=$!
     
     trap "catch $ID $IPC_PATH $PID" SIGUSR1
-
-    # chmod +x cpu_mem_info.sh
     
-    # rm "test/cpu.csv"
-    
-    # touch "test/cpu.csv"
-    
-    # ./cpu_mem_info.sh "$pid" "test/cpu.csv"
-    
+    # The parent program should be alive when the signal arrives
     sleep 100000
 }
 
