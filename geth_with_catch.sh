@@ -9,6 +9,7 @@ readonly ARGS="$@"
 catch() {
     local readonly ID=$1
     local readonly IPC_PATH=$2
+    local readonly PID=$3
 
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
@@ -22,8 +23,7 @@ catch() {
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
-    pkill -HUP geth
-    pkill cpu_mem_info.sh
+    kill -HUP $PID
     trap - SIGUSR1 # clear the trap
     printf "Done ..."
     exit 0
@@ -38,12 +38,12 @@ main() {
     shift # Forget about the first argument
     local GETH_ARGS="$@"
 
-    trap "catch $ID $IPC_PATH" SIGUSR1
-    
     geth $GETH_ARGS &
     
-    # local readonly pid=$!
+    local readonly PID=$!
     
+    trap "catch $ID $IPC_PATH $PID" SIGUSR1
+
     # chmod +x cpu_mem_info.sh
     
     # rm "test/cpu.csv"
