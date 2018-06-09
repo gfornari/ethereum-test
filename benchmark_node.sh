@@ -24,8 +24,7 @@ start_benchmark() {
 
     local extra_option="" 
     
-    printf "My role is $ROLE == miner?\n"
-    if [[ "$ROLE" = "\"miner\"" ]]; then
+    if [[ "$ROLE" = "miner" ]]; then
         printf "$ROLE is miner...\n"
         extra_option="--mine --minerthreads 1"
     else
@@ -87,7 +86,7 @@ main() {
         local readonly DATADIR=$BASE_DATADIR$node
         local readonly ETHASH_DIR=$BASE_ETHASH_DIR$node
         local readonly OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
-        local readonly ROLE=$(echo $ROLE_LIST | jq ".[$node]")
+        local readonly ROLE=$(echo $ROLE_LIST | jq -r ".[$node]")
         local readonly JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
         local readonly IPC_PATH="$HOME/geth-$node.ipc"
 

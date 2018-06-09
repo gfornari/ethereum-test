@@ -53,7 +53,7 @@ generate_ethash_structs() {
 
     
     # Miner should generate also the DAG 
-    if [[ "$ROLE" = "\"miner\"" ]]; then
+    if [[ "$ROLE" = "miner" ]]; then
         printf "Generating the dag in $ETHASH_DAG_DIR."
         printf " This may take a while ...\n"
         geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
@@ -92,7 +92,7 @@ main() {
         local readonly DATADIR=$BASE_DATADIR$node
         local readonly ETHASH_DIR=$BASE_ETHASH_DIR$node
         local readonly OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node.out"
-        local readonly ROLE=$(echo $ROLE_LIST | jq ".[$node]")
+        local readonly ROLE=$(echo $ROLE_LIST | jq -r ".[$node]")
 
         printf "Configuring node $node with role $ROLE...\n"
 
