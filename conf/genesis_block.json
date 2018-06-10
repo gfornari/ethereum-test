@@ -6,7 +6,7 @@
         "eip158Block": 0
     },
   "coinbase"   : "0x0000000000000000000000000000000000000000",
-  "difficulty" : "131075",
+  "difficulty" : "159268",
   "extraData"  : "",
   "gasLimit"   : "0x2fefd8",
   "nonce"      : "0x37a2f64534",
