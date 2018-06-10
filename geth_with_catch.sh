@@ -26,7 +26,7 @@ catch() {
                 attach ipc://$IPC_PATH >> test/final_difficulty-$ID.txt
     
     geth --exec "timestamps=[]; for(i = 0; i < eth.blockNumber; i++) {\
-                timestamps.push(eth.timestamp); }; timestamps; " \
+                timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
                 attach ipc://$IPC_PATH >> test/final_timestamps-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
