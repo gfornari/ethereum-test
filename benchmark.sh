@@ -8,12 +8,19 @@ readonly ARGS="$@"
 
 main() {
     if [[ "$#" -lt "1" ]]; then
-        printf "Usage %s <conf-file> \n" $PROGNAME
+        printf "Usage %s <conf-file> [ITERATIONS]\n" $PROGNAME
         exit 1;
     fi
 
     local readonly CONF_FILE=$1
-    local readonly ITERATIONS=5
+    local ITERATIONS=5
+
+    if [[ "$#" -gt "1" ]]; then
+        ITERATIONS=$2
+    fi
+
+    printf "Benchmark with ITERATIONS $ITERATIONS\n"
+
 
     # Check if the configuration file is a valid json...
     cat $CONF_FILE | jq "." 2> /dev/null > /dev/null
