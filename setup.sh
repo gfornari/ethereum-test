@@ -195,8 +195,11 @@ main() {
     
     TIMEOUT_BENCHMARK_SLEEP=$((${RAW_TIMEOUT_BENCHMARK}+${EXTRA_TIMEOUT}))
     
-    date=$(date +"%H:%M")
-    printf "[$date]: Wait $TIMEOUT_BENCHMARK_SLEEP seconds, to collect results\n"
+    INITIAL_DATE=$(date +"%H:%M:%S")
+    EXPECTED_END_DATE=$(date +"%H:%M:%S" -d "$TIMEOUT_BENCHMARK_SLEEP seconds")
+
+    printf "[$INITIAL_DATE]: Wait $TIMEOUT_BENCHMARK_SLEEP seconds, to collect results. "
+    printf "Expected Finish date $EXPECTED_END_DATE\n"
 
     
     sleep $TIMEOUT_BENCHMARK_SLEEP
