@@ -20,6 +20,7 @@ catch() {
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count;" \
                 attach ipc://$IPC_PATH >> test/transactions-$ID.txt
+    geth --exec "eth.getBlock(eth.blockNumber).difficulty" attach ipc://$IPC_PATH >> test/final_difficulty-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
