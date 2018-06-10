@@ -36,7 +36,7 @@ init_genesis() {
 
     printf "Init GENESIS"
 
-    geth init --datadir $DATADIR conf/genesis_block.json >> $OUTPUT_FILE 2>&1
+    geth --datadir $DATADIR init conf/genesis_block.json >> $OUTPUT_FILE 2>&1
 }
 
 
