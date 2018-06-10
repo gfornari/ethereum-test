@@ -34,7 +34,9 @@ init_genesis() {
     local readonly DATADIR=$1
     local readonly OUTPUT_FILE=$2
 
-    geth init --datadir $DATADIR conf/genesis_block.json > $OUTPUT_FILE 2>&1
+    printf "Init GENESIS"
+
+    geth init --datadir $DATADIR conf/genesis_block.json >> $OUTPUT_FILE 2>&1
 }
 
 
@@ -100,13 +102,14 @@ main() {
 
         # remove eventual preexisting directory
         rm -rf $DATADIR
+        rm -rf $OUTPUT_FILE
 
         # init genesis block
         init_genesis $DATADIR $OUTPUT_FILE
 
         generate_ethash_structs \
             $ROLE \
-            $ETHASH_DIR > $OUTPUT_FILE
+            $ETHASH_DIR >> $OUTPUT_FILE
     done
         
     # end for each
