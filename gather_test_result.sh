@@ -17,19 +17,22 @@ readonly BRANCH_NAME="benchmark"
 
 
 gather_info() {
-    local login_name=$1
-    local address=$2
-    local result_path=$3 # Path to the result test relative to home dir
+    local readonly login_name=$1
+    local readonly address=$2
+    local readonly result_path=$3 # Path to the result test relative to home dir
+    local readonly test_dir=$4
     
-    mkdir -p test/$address
-    scp -r $login_name@$address:$result_path/* test/$address/
+    mkdir -p $test_dir/$address
+    scp -r $login_name@$address:$result_path/* $test_dir/$address/
 }
 
 remove_old_results() {
-    local login_name=$1
-    local address=$2
-    local result_path=$3
+    local readonly login_name=$1
+    local readonly address=$2
+    local readonly result_path=$3
+    local readonly test_dir=$4
 
+    rm -rf $test_dir/*
     cmd="rm -rf $result_path/*"
     echo $cmd | ssh "$login_name@$address" "bash -s"
 }
@@ -55,10 +58,14 @@ main() {
     
     printf "Let's execute $COMMAND\n"
 
+    local readonly TEST_DIR=$(jq -r ".test_dir" $CONF_FILE)
+
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
     local start_node_id=0
     local computer=""
+
+
     while [ true ]; do
         computer=$(jq -r ".nodes[$computer_id]" $CONF_FILE)
         if [ "$computer" == "null" ]; then
@@ -69,7 +76,7 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         
-        $FUNCTION "$login_name" "$address" "./ethereum-test/test"
+        $FUNCTION "$login_name" "$address" "./ethereum-test/test" "$TEST_DIR"
         
         start_id=$((start_id+num_client))
         
