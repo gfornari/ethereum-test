@@ -25,6 +25,10 @@ catch() {
                  diff.push(eth.getBlock(i).difficulty); }; diff;" \
                 attach ipc://$IPC_PATH >> test/final_difficulty-$ID.txt
     
+    geth --exec "timestamps=[]; for(i = 0; i < eth.blockNumber; i++) {\
+                timestamps.push(eth.timestamp); }; timestamps; " \
+                attach ipc://$IPC_PATH >> test/final_timestamps-$ID.txt
+    
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
     kill -HUP $PID
