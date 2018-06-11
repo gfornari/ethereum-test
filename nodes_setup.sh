@@ -37,7 +37,7 @@ init_genesis() {
     local readonly START_DIFFICULTY=$4
 
     cat conf/genesis_block.json | jq ".timestamp=\"$TIMESTAMP\"" \
-    | jq ".difficulty=\"$DIFFICULTY\"" > /tmp/genesis_block.json
+    | jq ".difficulty=\"$START_DIFFICULTY\"" > /tmp/genesis_block.json
 
 
     
