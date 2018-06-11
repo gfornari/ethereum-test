@@ -33,10 +33,13 @@ read_chainid() {
 init_genesis() {
     local readonly DATADIR=$1
     local readonly OUTPUT_FILE=$2
+    local readonly TIMESTAMP=$3
 
-    printf "Init GENESIS"
+    cat conf/genesis_block.json | jq ".timestamp=$TIMESTAMP" > /tmp/genesis_block.json
 
-    geth --datadir $DATADIR init conf/genesis_block.json >> $OUTPUT_FILE 2>&1
+    
+
+    geth --datadir $DATADIR init /tmp/genesis_block.json >> $OUTPUT_FILE 2>&1
 }
 
 
@@ -69,13 +72,14 @@ generate_ethash_structs() {
 main() { 
 
     # check arguments
-    if [ $# -lt 1 ]; then
-        printf "Usage: `basename "$0"` <role_list>\n"
+    if [ $# -lt 2 ]; then
+        printf "Usage: `basename "$0"` <role_list> <timestamp>\n"
         exit 1
     fi
   
     local readonly ROLE_LIST=$1
-    printf "$ROLE_LIST\n"
+    local readonly TIMESTAMP=$2
+
     local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
     local readonly BASE_ETHASH_DIR="$HOME/ethash"
@@ -105,7 +109,7 @@ main() {
         rm -rf $OUTPUT_FILE
 
         # init genesis block
-        init_genesis $DATADIR $OUTPUT_FILE
+        init_genesis $DATADIR $OUTPUT_FILE $TIMESTAMP
 
         generate_ethash_structs \
             $ROLE \

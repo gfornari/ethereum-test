@@ -41,7 +41,7 @@ start_benchmark() {
     
     
     if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        cmd="$BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
+        cmd="$BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval" 
         echo $cmd | bash -s 
     else
        
@@ -59,6 +59,7 @@ setup_machine() {
     local readonly login_name=$1
     local readonly address=$2
     local readonly role_list=$3
+    local readonly timestamp=$4
 
     printf "\n\n\nROLE LIST=$role_list\n\n\n"
 
@@ -69,7 +70,7 @@ setup_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT '$role_list';"
+    $NODES_SETUP_SCRIPT '$role_list' $timestamp;"
     
     
     
@@ -77,7 +78,7 @@ setup_machine() {
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
         git pull;\
-        $NODES_SETUP_SCRIPT '$role_list';"
+        $NODES_SETUP_SCRIPT '$role_list' $timestamp;"
         printf "$cmd\n\n"
         echo $cmd | bash -s 
     else
@@ -133,6 +134,7 @@ main() {
 
     printf "The bootnode address is: $ENODE_ADDRESS ...\n"
 
+    timestamp=$(date +%s)
     #
     # Configure all the machines
     #
@@ -154,7 +156,7 @@ main() {
         local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
         printf "$role_list"
        
-        setup_machine "$login_name" "$address" "$role_list"
+        setup_machine "$login_name" "$address" "$role_list" "$timestamp"
         
         COMPUTER_ID=$((COMPUTER_ID+1))
     done
@@ -162,6 +164,8 @@ main() {
 
     printf "Setup done ..\n"
     
+
+
 
     #
     # Start the benchmark
@@ -183,7 +187,16 @@ main() {
         local readonly role_list=$(jq -r -c ".roles" $tmp_file)
         local readonly num_client=$(echo $role_list | jq "length")
         
-        start_benchmark "$login_name" "$address" "$role_list" "$START_NODE_ID" "$ENODE_ADDRESS" "$internal_address" "$TIMEOUT_BENCHMARK" "$TX_INTERVAL"
+        start_benchmark \
+            "$login_name"\
+            "$address" \
+            "$role_list" \
+            "$START_NODE_ID" \
+            "$ENODE_ADDRESS" \
+            "$internal_address" \
+            "$TIMEOUT_BENCHMARK" \
+            "$TX_INTERVAL" \
+
         
         START_NODE_ID=$((START_NODE_ID+num_client))
         
