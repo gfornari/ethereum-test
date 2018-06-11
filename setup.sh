@@ -132,6 +132,8 @@ main() {
     local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
     local readonly START_DIFFICULTY=$(jq -r ".start_difficulty" $CONF_FILE)
+
+    printf "START_DIFFICULTY = $START_DIFFICULTY"
     
 
     printf "The bootnode address is: $ENODE_ADDRESS ...\n"
