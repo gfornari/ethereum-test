@@ -60,6 +60,7 @@ setup_machine() {
     local readonly address=$2
     local readonly role_list=$3
     local readonly timestamp=$4
+    local readonly START_DIFFICULTY=$5
 
     printf "\n\n\nROLE LIST=$role_list\n\n\n"
 
@@ -70,7 +71,7 @@ setup_machine() {
     cd $REPO_OUTPUT_DIR;\
     git checkout $BRANCH_NAME;\
     git pull;\
-    $NODES_SETUP_SCRIPT '$role_list' $timestamp;"
+    $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
     
     
     
@@ -78,7 +79,7 @@ setup_machine() {
         printf "local\n\n\n"
         cmd="git checkout $BRANCH_NAME;\
         git pull;\
-        $NODES_SETUP_SCRIPT '$role_list' $timestamp;"
+        $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
         printf "$cmd\n\n"
         echo $cmd | bash -s 
     else
@@ -130,6 +131,7 @@ main() {
     local readonly RAW_TIMEOUT_BENCHMARK=$(jq -r ".timeout" $CONF_FILE)
     local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
+    local readonly START_DIFFICULTY=$(jq -r ".start_difficulty" $CONF_FILE)
     
 
     printf "The bootnode address is: $ENODE_ADDRESS ...\n"
@@ -156,7 +158,7 @@ main() {
         local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
         printf "$role_list"
        
-        setup_machine "$login_name" "$address" "$role_list" "$timestamp"
+        setup_machine "$login_name" "$address" "$role_list" "$timestamp" "$START_DIFFICULTY"
         
         COMPUTER_ID=$((COMPUTER_ID+1))
     done
