@@ -35,7 +35,7 @@ init_genesis() {
     local readonly OUTPUT_FILE=$2
     local readonly TIMESTAMP=$3
 
-    cat conf/genesis_block.json | jq ".timestamp=\"$TIMESTAMP\""" > /tmp/genesis_block.json
+    cat conf/genesis_block.json | jq ".timestamp=\"$TIMESTAMP\"" > /tmp/genesis_block.json
 
     
 
