@@ -14,30 +14,35 @@ catch() {
 
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
-    # geth --exec "debug.metrics(true)" attach ipc:$1 > test/metrics.txt
-    geth --exec "eth.blockNumber" attach ipc://$IPC_PATH >> test/block_number-$ID.txt
+    # Use the same block number now on to avoid modification during 
+    # reading of info that create inconsistencies in the read results
+    BLOCK_NUMBER=$(geth --exec "eth.blockNumber" attach ipc://$IPC_PATH)
+    geth --exec "eth.pendingTransactions.length" \
+                attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
     geth --exec "tx_count=0; \
-                for(i = 0; i < eth.blockNumber; i++) { \
+                for(i = 0; i < $BLOCK_NUMBER; i++) { \
                 tx_count += eth.getBlock(i).transactions.length;}; \
                 tx_count;" \
                 attach ipc://$IPC_PATH >> test/transactions-$ID.txt
     
-    geth --exec "diff=[]; for(i = 0; i < eth.blockNumber; i++) { \
+    geth --exec "diff=[]; for(i = 0; i < $BLOCK_NUMBER; i++) { \
                  diff.push(eth.getBlock(i).difficulty); }; diff;" \
                 attach ipc://$IPC_PATH >> test/final_difficulty-$ID.txt
     
-    geth --exec "timestamps=[]; for(i = 0; i < eth.blockNumber; i++) {\
+    geth --exec "timestamps=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
                 attach ipc://$IPC_PATH >> test/final_timestamps-$ID.txt
     
-    geth --exec "eth.pendingTransactions.length" \
-                attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
+    
+
+    echo $BLOCK_NUMBER >> test/block_number-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
     kill -HUP $PID
     trap - SIGUSR1 # clear the trap
     du -h $DATADIR >> test/blockchain_dir_size-$ID.txt
+    echo "---" >> test/blockchain_dir_size-$ID.txt
     printf "Done ..."
     exit 0
 }
