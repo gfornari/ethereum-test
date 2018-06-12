@@ -35,7 +35,7 @@ catch() {
     
     # get the run
     RUN=0
-    while [[ -a test/final_difficulty-$ID-$RUN ]];
+    while [[ -a test/final_difficulty-$ID-$RUN.txt ]];
     do
         RUN=$((RUN+1))
     done 
