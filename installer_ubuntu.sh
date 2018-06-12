@@ -122,13 +122,15 @@ main() {
     
     # Download GETH from internet
     go get -d github.com/ethereum/go-ethereum
-    cd $GOPATH/github.com/ethereum/go-ethereum
+    cd $GOPATH/src/github.com/ethereum/go-ethereum
     # Change to stable release
     git checkout v1.8.11
 
+    printf "Compiling and installing geth, it may take a while ..."
+
     go install github.com/ethereum/go-ethereum/cmd/geth
 
-    sudo ln -s /home/mirko/go_path/bin/geth /bin/
+    sudo ln -s $GOPATH/bin/geth /bin/
 
     printf "Done. All dependencies are now installed ...\n"
 }
