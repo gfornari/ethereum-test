@@ -29,6 +29,8 @@ catch() {
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
                 attach ipc://$IPC_PATH >> test/final_timestamps-$ID.txt
     
+    geth --exec "eth.pendingTransactions" attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
+    
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
     kill -HUP $PID
