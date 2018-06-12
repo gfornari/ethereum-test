@@ -21,6 +21,8 @@ To setup a network you need a configuration file
 {
     "timeout": "50",
     "tx_interval": "1000",
+    "test_dir": "./test/",
+    "start_difficulty": 240000,
     "bootnode": "enode://...",
     "nodes": 
     [
@@ -42,7 +44,7 @@ To setup a network you need a configuration file
 
 ## Deployment
 
-```./setup.sh conf/conf.json```
+```./benchmark.sh conf/conf.json 1```
 
 ## Contributing
 
