@@ -10,6 +10,7 @@ catch() {
     local readonly ID=$1
     local readonly IPC_PATH=$2
     local readonly PID=$3
+    local readonly DATADIR=$4
 
     printf "Dump metrics to metrics.txt\n"
     mkdir -p test
@@ -29,12 +30,14 @@ catch() {
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
                 attach ipc://$IPC_PATH >> test/final_timestamps-$ID.txt
     
-    geth --exec "eth.pendingTransactions.length" attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
+    geth --exec "eth.pendingTransactions.length" \
+                attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
     
     # Do other useful stuffs, e.g. upload stats to central server and so on
     # Sends SIGNAL to child/sub processes
     kill -HUP $PID
     trap - SIGUSR1 # clear the trap
+    du -h $DATADIR
     printf "Done ..."
     exit 0
 }
@@ -44,6 +47,7 @@ catch() {
 
 main() {
     local readonly ID=$1
+    local readonly DATADIR=$3
     local readonly IPC_PATH=$7
     shift # Forget about the first argument
     local GETH_ARGS="$@"
@@ -52,7 +56,7 @@ main() {
     
     local readonly PID=$!
     
-    trap "catch $ID $IPC_PATH $PID" SIGUSR1
+    trap "catch $ID $IPC_PATH $PID $DATADIR" SIGUSR1
     
     # The parent program should be alive when the signal arrives
     sleep 100000
