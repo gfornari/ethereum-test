@@ -47,6 +47,9 @@ catch() {
     rm /tmp/final_timestamps-$ID.txt
     rm /tmp/final_timestamps-$ID.txt
 
+    rm /tmp/final_timestamps-$ID.txt
+    rm /tmp/final_timestamps-$ID.txt
+
 
     echo $BLOCK_NUMBER >> test/block_number-$ID.txt
     
