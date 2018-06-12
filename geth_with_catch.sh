@@ -41,8 +41,8 @@ catch() {
     done 
 
     # Put each entry of the javascript list in a separate line
-    cat /tmp/final_difficulty-$ID.txt | tr "[]" " " | tr " " "\n" > test/final_difficulty-$ID-$RUN.txt
-    cat /tmp/final_timestamps-$ID.txt | tr "[]" " " | tr " " "\n" > test/final_timestamps-$ID-$RUN.txt
+    cat /tmp/final_difficulty-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_difficulty-$ID-$RUN.txt
+    cat /tmp/final_timestamps-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_timestamps-$ID-$RUN.txt
 
     rm /tmp/final_timestamps-$ID.txt
     rm /tmp/final_difficulty-$ID.txt
