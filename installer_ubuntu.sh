@@ -89,6 +89,8 @@ main() {
         wget https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
         tar -C /usr/local -xzf "$archive_name"
 
+
+        
         export GOROOT="/usr/local/go"
         export GOPATH="${HOME}/go_path"
         export PATH="$PATH:${GOROOT}/bin:${GOPATH}/bin"
@@ -104,6 +106,11 @@ main() {
             printf "Go was not installed successfully ..."
             exit
         fi
+
+
+        # Install DEP
+        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
     fi
     
     
@@ -117,6 +124,9 @@ main() {
     apt-get_install "jq" "jq --help" "jq"
     
     go get -d github.com/ethereum/go-ethereum
+    cd $GOPATH/github.com/ethereum/go-ethereum
+    git checkout v1.8.11 # Change to stable release
+
     go install github.com/ethereum/go-ethereum/cmd/geth 
     sudo ln -s /home/mirko/go_path/bin/geth /bin/
 
