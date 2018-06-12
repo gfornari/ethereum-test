@@ -106,11 +106,6 @@ main() {
             printf "Go was not installed successfully ..."
             exit
         fi
-
-
-        # Install DEP
-        curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-
     fi
     
     
