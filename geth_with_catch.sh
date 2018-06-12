@@ -26,17 +26,17 @@ catch() {
     
     geth --exec "diff=[]; for(i = 0; i < $BLOCK_NUMBER; i++) { \
                  diff.push(eth.getBlock(i).difficulty); }; diff;" \
-                attach ipc://$IPC_PATH >> /tmp/final_difficulty-$ID.txt
+                attach ipc://$IPC_PATH > /tmp/final_difficulty-$ID.txt
 
     
     geth --exec "timestamps=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
-                attach ipc://$IPC_PATH >> /tmp/final_timestamps-$ID.txt
+                attach ipc://$IPC_PATH > /tmp/final_timestamps-$ID.txt
     
     # get the run
     RUN=0
     while [[ -a test/final_difficulty-$ID-$RUN ]];
-    do 
+    do
         RUN=$((RUN+1))
     done 
 
@@ -45,10 +45,8 @@ catch() {
     cat /tmp/final_timestamps-$ID.txt | tr "[]" " " | tr " " "\n" > test/final_timestamps-$ID-$RUN.txt
 
     rm /tmp/final_timestamps-$ID.txt
-    rm /tmp/final_timestamps-$ID.txt
+    rm /tmp/final_difficulty-$ID.txt
 
-    rm /tmp/final_timestamps-$ID.txt
-    rm /tmp/final_timestamps-$ID.txt
 
 
     echo $BLOCK_NUMBER >> test/block_number-$ID.txt
