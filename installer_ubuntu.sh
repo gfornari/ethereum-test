@@ -110,7 +110,9 @@ main() {
     
     
     apt-get update
-    
+
+    # DEPENDENCY GCC
+    apt-get_install "gcc" "which gcc" "gcc"
     # Dependency SSHD
     apt-get_install "sshd" "which sshd" "openssh"
     # Dependency git
@@ -118,11 +120,14 @@ main() {
     # Dependency jq
     apt-get_install "jq" "jq --help" "jq"
     
+    # Download GETH from internet
     go get -d github.com/ethereum/go-ethereum
     cd $GOPATH/github.com/ethereum/go-ethereum
-    git checkout v1.8.11 # Change to stable release
+    # Change to stable release
+    git checkout v1.8.11
 
-    go install github.com/ethereum/go-ethereum/cmd/geth 
+    go install github.com/ethereum/go-ethereum/cmd/geth
+
     sudo ln -s /home/mirko/go_path/bin/geth /bin/
 
     printf "Done. All dependencies are now installed ...\n"
