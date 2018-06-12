@@ -26,12 +26,12 @@ catch() {
     
     geth --exec "diff=[]; for(i = 0; i < $BLOCK_NUMBER; i++) { \
                  diff.push(eth.getBlock(i).difficulty); }; diff;" \
-                attach ipc://$IPC_PATH >> tmp/final_difficulty-$ID.txt
+                attach ipc://$IPC_PATH >> /tmp/final_difficulty-$ID.txt
 
     
     geth --exec "timestamps=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
-                attach ipc://$IPC_PATH >> tmp/final_timestamps-$ID.txt
+                attach ipc://$IPC_PATH >> /tmp/final_timestamps-$ID.txt
     
     # get the run
     RUN=0
@@ -41,8 +41,8 @@ catch() {
     done 
 
     # Put each entry of the javascript list in a separate line
-    cat tmp/final_difficulty-$ID.txt | tr "[]" " " | tr " " "\n" >> test/final_difficulty-$ID-$RUN.txt
-    cat tmp/final_timestamps-$ID.txt | tr "[]" " " | tr " " "\n" >> test/final_timestamps-$ID-$RUN.txt
+    cat /tmp/final_difficulty-$ID.txt | tr "[]" " " | tr " " "\n" >> test/final_difficulty-$ID-$RUN.txt
+    cat /tmp/final_timestamps-$ID.txt | tr "[]" " " | tr " " "\n" >> test/final_timestamps-$ID-$RUN.txt
 
 
     echo $BLOCK_NUMBER >> test/block_number-$ID.txt
