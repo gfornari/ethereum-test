@@ -6,24 +6,25 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
-readonly BOOTNODE_PORT=29999
-readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
-readonly NODES_SETUP_SCRIPT="./nodes_setup.sh"
-readonly BENCHMARK_SCRIPT="./benchmark_node.sh"
-
-readonly GIT_REPOSITORY="https://github.com/gfornari/ethereum-test"
-readonly REPO_OUTPUT_DIR="./ethereum-test"
-readonly BRANCH_NAME="benchmark"
-
-
 gather_info() {
     local readonly login_name=$1
     local readonly address=$2
     local readonly result_path=$3 # Path to the result test relative to home dir
     local readonly test_dir=$4
+    local readonly role_length=$5
     
     mkdir -p $test_dir/$address
     scp -r $login_name@$address:$result_path/* $test_dir/$address/
+
+    for ID in $(seq 0 $((role_length-1)));
+    do
+        ./column_composer.py $test_dir/$address/final_difficulty-$ID-*.txt $test_dir/$address/final_difficulty-$ID.csv
+        ./column_composer.py $test_dir/$address/final_timestamps-$ID-*.txt $test_dir/$address/final_timestamps-$ID.csv
+    done
+    
+
+  
+
 }
 
 remove_old_results() {
@@ -75,8 +76,9 @@ main() {
         echo $computer > $tmp_file
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
+        role_length=$(jq -r ".roles" $tmp_file | jq "length")
         
-        $FUNCTION "$login_name" "$address" "./ethereum-test/test" "$TEST_DIR"
+        $FUNCTION "$login_name" "$address" "$REPO_OUT_DIR/test" "$TEST_DIR" "$role_length"
         
         start_id=$((start_id+num_client))
         
