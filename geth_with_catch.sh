@@ -55,8 +55,7 @@ catch() {
     # Sends SIGNAL to child/sub processes
     kill -HUP $PID
     trap - SIGUSR1 # clear the trap
-    du -h $DATADIR >> test/blockchain_dir_size-$ID.txt
-    echo "---" >> test/blockchain_dir_size-$ID.txt
+    du $DATADIR >> test/blockchain_dir_size-$ID-$RUN.txt
     printf "Done ..."
     exit 0
 }
