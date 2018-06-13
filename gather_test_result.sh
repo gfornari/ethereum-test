@@ -5,6 +5,7 @@
 readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
+readonly REPO_OUT_DIR="./ethereum-test"
 
 gather_info() {
     local readonly login_name=$1
