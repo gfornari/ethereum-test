@@ -45,7 +45,7 @@ start_benchmark() {
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
         "--cpuprofile" "geth.cpu" \
-        "--js" "$JS_SCRIPT_PATH"
+        "--js" "$JS_SCRIPT_PATH" \
         "$extra_option" \
         >> $OUTPUT_FILE 2>&1 &
 }
