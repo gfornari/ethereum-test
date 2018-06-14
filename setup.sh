@@ -62,30 +62,20 @@ setup_machine() {
     local readonly timestamp=$4
     local readonly START_DIFFICULTY=$5
 
-    printf "\n\n\nROLE LIST=$role_list\n\n\n"
-
-    cmd="\
-    if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
-        git clone $GIT_REPOSITORY $REPO_OUTPUT_DIR;\
-    fi;\
-    cd $REPO_OUTPUT_DIR;\
-    git checkout $BRANCH_NAME;\
-    git pull;\
-    $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
+    # cmd="\
+    # if ! [[ -d \"$REPO_OUTPUT_DIR\" ]]; then\
+    #    git clone $GIT_REPOSITORY $REPO_OUTPUT_DIR;\
+    # fi;\
+    # cd $REPO_OUTPUT_DIR;\
+    # git checkout $BRANCH_NAME;\
+    # git pull;
     
+    scp -r ./$LOCAL_REPO_DIR $login_name@$address:$REPO_OUTPUT_DIR
     
-    
-    if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        printf "local\n\n\n"
-        cmd="git checkout $BRANCH_NAME;\
-        git pull;\
+    cmd="cd $REPO_OUTPUT_DIR; \
         $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
-        printf "$cmd\n\n"
-        echo $cmd | bash -s 
-    else
-        echo $cmd | ssh "$login_name@$address" "bash -s"
-    fi
 
+    echo $cmd | ssh "$login_name@$address" "bash -s"
 }
 
 
@@ -139,6 +129,16 @@ main() {
     printf "The bootnode address is: $ENODE_ADDRESS ...\n"
 
     timestamp=$(date +%s)
+
+    local readonly LOCAL_REPO_DIR=$(basename $GIT_REPOSITORY)
+    if ! [[ -d \"./$LOCAL_REPO_DIR\" ]]; then\
+        git clone $GIT_REPOSITORY;\
+    fi;\
+    cd ./$LOCAL_REPO_DIR
+    git checkout $BRANCH_NAME
+    git pull
+    cd ..
+    
     #
     # Configure all the machines
     #
