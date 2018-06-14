@@ -21,16 +21,23 @@ start_benchmark() {
     local readonly ETHASH_CACHE_DIR="$ETHASH_DIR/cache"
     local readonly ETHASH_DAG_DIR="$ETHASH_DIR/dag"
 
+    # if [[ "$ROLE" = "miner" ]]; then
+    #    printf "Node is miner...\n"
+    #    extra_option=" --mine --minerthreads 1 "
+    # fi
+    # js_cmd="js $JS_SCRIPT_PATH"
+    # extra_option=$(eval echo $extra_option)
+    # js_cmd=$(eval echo $js_option)
 
     local extra_option="" 
     
     if [[ "$ROLE" = "miner" ]]; then
-        printf "Node is miner...\n"
-        extra_option=" --mine --minerthreads 1 "
+        printf "$ROLE is miner...\n"
+        extra_option="--mine --minerthreads 1"
+    else
+        extra_option="js $JS_SCRIPT_PATH"
     fi
-    js_cmd="js $JS_SCRIPT_PATH"
     extra_option=$(eval echo $extra_option)
-    js_cmd=$(eval echo $js_option)
 
     printf "Node $NODE_ID"
     
@@ -47,7 +54,6 @@ start_benchmark() {
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
         "$extra_option" \
-        "$js_cmd" \
         >> $OUTPUT_FILE 2>&1 &
 }
 
