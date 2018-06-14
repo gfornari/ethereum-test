@@ -10,6 +10,7 @@ def main(argv):
     config["tx_interval"] = argv[3]
     config["test_dir"] = argv[4]
     config["start_difficulty"] = int(argv[5])
+    config["bootnode"] = argv[6]
 
 
     with open(argv[0], "r") as fd:
@@ -25,7 +26,7 @@ def main(argv):
 if __name__ == '__main__':    
     
     if len(sys.argv) < 8:
-        print("Usage: %s <ip_file> <test-time> <elapsed-time-between-tests> <tx_interval> <test-output-dir> <start_difficulty> <output_file>" % sys.argv[0])
+        print("Usage: %s <ip_file> <test-time> <elapsed-time-between-tests> <tx_interval> <test-output-dir> <start_difficulty> <bootnode-enode> <output_file>" % sys.argv[0])
         sys.exit(0)
     main(sys.argv[1:])
 
