@@ -15,20 +15,12 @@ readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
 stop_machine() {
     local login_name=$1
     local address=$2
-    if [[ "$address" == "127.0.0.1" ]] || [[ "$address" == "localhost" ]] || [[ "$address" == "$IP_ADDRESS" ]]; then
-        pkill -s SIGKILL geth
-        pkill -f ./cpu_mem_info.sh
-    else
-        ssh "$login_name@$address" pkill geth
-        ssh "$login_name@$address" pkill -f ./cpu_mem_info.sh
-    fi
-   
+
+    ssh "$login_name@$address" pkill -HUP geth
+    ssh "$login_name@$address" pkill -HUP ./cpu_mem_info.sh
 
 }
 
-stop_bootnode() {
-    kill -INT $(pgrep bootnode)
-}
 
 main() { 
     if [[ "$#" -lt "1" ]]; then
@@ -38,7 +30,6 @@ main() {
 
     local readonly CONF_FILE=$1
     
-    stop_bootnode
 
     #FOR_EACH COMPUTER IN TEST_CONF
     local computer_id=0
@@ -54,9 +45,6 @@ main() {
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
         num_client=$(jq -r ".client_number" $tmp_file)
-        if [[ "$address" == "$IP_ADDRESS" ]]; then
-            address="127.0.0.1"
-        fi
         
         stop_machine "$login_name" "$address"
         
