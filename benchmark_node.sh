@@ -39,6 +39,7 @@ start_benchmark() {
     js_cmd="js $JS_SCRIPT_PATH"
     
     js_cmd=$(eval echo $js_cmd)
+    extra_option=$(eval echo $extra_option)
 
     printf "Node $NODE_ID"
     
