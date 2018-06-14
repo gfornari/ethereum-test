@@ -18,7 +18,7 @@ def main(argv):
         ip_address_list = fd.readlines()
         node=[]
         for ip in ip_address_list:
-            node.append({"address": ip.strip(), "login_name": argv[, "roles":["client"]})
+            node.append({"address": ip.strip(), "login_name": login_name, "roles":["client"]})
     
     config["nodes"] = node
     with open(argv[8], "w") as out:
