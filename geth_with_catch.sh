@@ -69,6 +69,8 @@ main() {
     local readonly IPC_PATH=$7
     shift # Forget about the first argument
     local GETH_ARGS="$@"
+    GETH_ARGS_ARRAY=($@)
+    printf "${GETH_ARGS_ARRAY[@]}\n"
 
     geth $GETH_ARGS &
     
