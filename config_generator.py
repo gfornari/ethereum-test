@@ -20,12 +20,12 @@ def main(argv):
             node.append({"addresses": ip.strip(), "login_name": "scalability", "role":["client"]})
     
     config["nodes"] = node
-    with open(argv[6], "w") as out:
+    with open(argv[7], "w") as out:
         json.dump(config, fp=out, indent=4)
 
 if __name__ == '__main__':    
     
-    if len(sys.argv) < 8:
+    if len(sys.argv) < 9:
         print("Usage: %s <ip_file> <test-time> <elapsed-time-between-tests> <tx_interval> <test-output-dir> <start_difficulty> <bootnode-enode> <output_file>" % sys.argv[0])
         sys.exit(0)
     main(sys.argv[1:])
