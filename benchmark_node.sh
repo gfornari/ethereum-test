@@ -34,10 +34,11 @@ start_benchmark() {
     if [[ "$ROLE" = "miner" ]]; then
         printf "$ROLE is miner...\n"
         extra_option="--mine --minerthreads 1"
-    else
-        extra_option="js $JS_SCRIPT_PATH"
     fi
-    extra_option=$(eval echo $extra_option)
+    
+    js_cmd="js $JS_SCRIPT_PATH"
+    
+    js_cmd=$(eval echo $js_cmd)
 
     printf "Node $NODE_ID"
     
@@ -54,6 +55,7 @@ start_benchmark() {
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
         "$extra_option" \
+        "$js_cmd" \
         >> $OUTPUT_FILE 2>&1 &
 }
 
