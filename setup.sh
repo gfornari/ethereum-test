@@ -70,7 +70,9 @@ setup_machine() {
     # git checkout $BRANCH_NAME;\
     # git pull;
     
-    scp -r ./$LOCAL_REPO_DIR $login_name@$address:$REPO_OUTPUT_DIR
+    cmd="rm -rf $REPO_OUTPUT_DIR" | ssh "$login_name@$address" "bash -s"
+
+    scp -r ./$LOCAL_REPO_DIR/*.sh $login_name@$address:$REPO_OUTPUT_DIR
     
     cmd="cd $REPO_OUTPUT_DIR; \
         $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
