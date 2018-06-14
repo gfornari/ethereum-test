@@ -54,7 +54,7 @@ start_benchmark() {
         "--metrics" \
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
-        "--ethash.dagsondisk" "1"
+        "--ethash.dagsondisk" "1" \
         "$extra_option" \
         "$js_cmd" \
         >> $OUTPUT_FILE 2>&1 &
