@@ -56,7 +56,7 @@ generate_ethash_structs() {
     # Generate the ethash cache (both for miner and verifiers)
     printf "Generating the cache in $ETHASH_CACHE_DIR."
     printf " This may take a while ...\n"
-    geth --verbosity=0 makecache 0 "$ETHASH_CACHE_DIR"
+    geth makecache 0 "$ETHASH_CACHE_DIR"
     printf "Cache Generated\n"
 
     
@@ -64,7 +64,7 @@ generate_ethash_structs() {
     if [[ "$ROLE" = "miner" ]]; then
         printf "Generating the dag in $ETHASH_DAG_DIR."
         printf " This may take a while ...\n"
-        geth --verbosity=0 makedag 0 "$ETHASH_DAG_DIR"
+        geth makedag 0 "$ETHASH_DAG_DIR"
         printf "Dag generated\n"
     fi
 
