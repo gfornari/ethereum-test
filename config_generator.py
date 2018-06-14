@@ -5,7 +5,7 @@ import sys
 
 def main(argv):
     config = {}
-    config["test_time"] = argv[1]
+    config["timeout"] = argv[1]
     config["extra_timeout"] = int(argv[2])
     config["tx_interval"] = argv[3]
     config["test_dir"] = argv[4]
