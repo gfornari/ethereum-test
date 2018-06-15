@@ -128,7 +128,7 @@ main() {
     timestamp=$(date +%s)
 
     local readonly LOCAL_REPO_DIR=$(basename $GIT_REPOSITORY)
-    if ! [[ -d \"./$LOCAL_REPO_DIR\" ]]; then
+    if ! [[ -d "./$LOCAL_REPO_DIR" ]]; then
         git clone $GIT_REPOSITORY;
     fi;
     cd ./$LOCAL_REPO_DIR
