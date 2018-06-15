@@ -39,19 +39,12 @@ start_benchmark() {
     printf "\n\nstart machine $login_name@$address\n"
     
     
+    cmd="\
+    cd $REPO_OUTPUT_DIR;\
+    chmod +x $BENCHMARK_SCRIPT;\
+    $BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
     
-    if [[ "$address" == "$IP_ADDRESS" || "$address" == "127.0.0.1" ]]; then
-        cmd="$BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval" 
-        echo $cmd | bash -s 
-    else
-       
-        cmd="\
-        cd $REPO_OUTPUT_DIR;\
-        chmod +x $BENCHMARK_SCRIPT;\
-        $BENCHMARK_SCRIPT '$role_list' $start_id $internal_address $bootnode_address $timeout_interval $tx_interval"
-       
-        echo $cmd | ssh "$login_name@$address" "bash -s"
-    fi
+    echo $cmd | ssh "$login_name@$address" "bash -s"
 
 }
 
@@ -74,6 +67,7 @@ setup_machine() {
     echo $cmd | ssh "$login_name@$address" "bash -s"
 
     scp -r ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
+    
     
     cmd="cd $REPO_OUTPUT_DIR; \
         $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
