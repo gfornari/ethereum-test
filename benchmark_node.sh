@@ -93,7 +93,7 @@ main() {
 
     # get the run
     RUN=0
-    while [[ -a $OUTPUT_DIR/node-0-$RUN.out ]];
+    while [[ -a "$OUTPUT_DIR/node-0-$RUN.out" ]];
     do
         RUN=$((RUN+1))
     done 
