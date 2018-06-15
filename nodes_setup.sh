@@ -99,7 +99,7 @@ main() {
 
     # get the run
     RUN=0
-    while [[ -a $OUTPUT_DIR/node-setup-$node-$RUN.out ]];
+    while [[ -a $OUTPUT_DIR/node-setup-0-$RUN.out ]];
     do
         RUN=$((RUN+1))
     done 
