@@ -16,6 +16,8 @@ catch() {
     # Use the same block number now on to avoid modification during 
     # reading of info that create inconsistencies in the read results
     BLOCK_NUMBER=$(geth --exec "eth.blockNumber" attach ipc://$IPC_PATH)
+
+    
     geth --exec "eth.pendingTransactions.length" \
                 attach ipc://$IPC_PATH >> test/pendingTransactions-$ID.txt
     geth --exec "tx_count=0; \
@@ -47,7 +49,8 @@ catch() {
     rm /tmp/final_timestamps-$ID.txt
     rm /tmp/final_difficulty-$ID.txt
 
-
+    tmp=$(geth attach --exec "JSON.stringify(debug.metrics(true))" ipc://$IPC_PATH)
+    eval echo $tmp >> metrics-$ID-$RUN.json
 
     echo $BLOCK_NUMBER >> test/block_number-$ID.txt
     
