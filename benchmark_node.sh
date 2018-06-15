@@ -98,6 +98,8 @@ main() {
         RUN=$((RUN+1))
     done 
 
+    printf "RUN=$RUN\n"
+
     for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         # build datadir and output file string
         local readonly DATADIR=$BASE_DATADIR$node
