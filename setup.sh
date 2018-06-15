@@ -63,8 +63,8 @@ setup_machine() {
     # git checkout $BRANCH_NAME;\
     # git pull;
     
-    cmd="rm -rf $REPO_OUTPUT_DIR" 
-    echo $cmd | ssh "$login_name@$address" "bash -s"
+    # cmd="rm -rf $REPO_OUTPUT_DIR" 
+    # echo $cmd | ssh "$login_name@$address" "bash -s"
 
     # scp -r ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
     rsync -a ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
