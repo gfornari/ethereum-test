@@ -67,7 +67,7 @@ setup_machine() {
     echo $cmd | ssh "$login_name@$address" "bash -s"
 
     # scp -r ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
-    rsync -r ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
+    rsync -a ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
     
     cmd="cd $REPO_OUTPUT_DIR; \
         $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
