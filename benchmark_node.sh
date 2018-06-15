@@ -93,16 +93,17 @@ main() {
 
     # get the run
     RUN=0
-    printf "================\n"
+    printf "===== BENCH ====\n"
     ls $OUTPUT_DIR
     printf "====\n"
-    echo $OUTPUT_DIR/node-0-$RUN.out
-    printf "================\n"
+   
     
     while [[ -a "$OUTPUT_DIR/node-0-$RUN.out" ]];
     do
         RUN=$((RUN+1))
-    done 
+    done
+    echo $OUTPUT_DIR/node-0-$RUN.out
+    printf "================\n"
 
     printf "RUN=$RUN\n"
 
