@@ -56,7 +56,7 @@ catch() {
     kill -HUP $PID
     trap - SIGUSR1 # clear the trap
     du $DATADIR >> test/blockchain_dir_size-$ID-$RUN.txt
-    printf "Done ..."
+    printf "Done ...\n"
     exit 0
 }
 
