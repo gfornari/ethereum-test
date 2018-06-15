@@ -29,14 +29,19 @@ start_benchmark() {
     # extra_option=$(eval echo $extra_option)
     # js_cmd=$(eval echo $js_option)
 
-    local extra_option="" 
+    local extra_option=""
+    local js_cmd=
     
     if [[ "$ROLE" = "miner" ]]; then
         printf "$ROLE is miner...\n"
         extra_option="--mine --minerthreads 1"
     fi
     
-    js_cmd="js $JS_SCRIPT_PATH"
+    if [[ "$ROLE" = "client" ]]; then
+        printf "$ROLE is client...\n"
+        js_cmd="js $JS_SCRIPT_PATH"
+    fi
+    
     
     js_cmd=$(eval echo $js_cmd)
     extra_option=$(eval echo $extra_option)
