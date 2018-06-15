@@ -16,6 +16,7 @@ gather_info() {
     
     mkdir -p $test_dir/$address
     scp -r $login_name@$address:$result_path/* $test_dir/$address/
+    scp -r $login_name@$address:$REPO_OUT_DIR/logs $test_dir/$address
 
     for ID in $(seq 0 $((role_length-1)));
     do
