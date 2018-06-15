@@ -50,7 +50,7 @@ catch() {
     rm /tmp/final_difficulty-$ID.txt
 
     tmp=$(geth attach --exec "JSON.stringify(debug.metrics(true))" ipc://$IPC_PATH)
-    eval echo $tmp >> metrics-$ID-$RUN.json
+    eval echo $tmp >> test/metrics-$ID-$RUN.json
 
     echo $BLOCK_NUMBER >> test/block_number-$ID.txt
     
