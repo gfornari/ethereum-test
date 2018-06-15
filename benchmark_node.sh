@@ -91,11 +91,18 @@ main() {
 
     printf "Let's start $ROLE_LIST $NODES_AMOUNT nodes\n"
 
+    # get the run
+    RUN=0
+    while [[ -a $OUTPUT_DIR/node-$node-$RUN.out ]];
+    do
+        RUN=$((RUN+1))
+    done 
+
     for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         # build datadir and output file string
         local readonly DATADIR=$BASE_DATADIR$node
         local readonly ETHASH_DIR=$BASE_ETHASH_DIR$node
-        local readonly OUTPUT_FILE="$OUTPUT_DIR/node-$node.out"
+        local readonly OUTPUT_FILE="$OUTPUT_DIR/node-$node-$RUN.out"
         local readonly ROLE=$(echo $ROLE_LIST | jq -r ".[$node]")
         local readonly JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
         local readonly IPC_PATH="$HOME/geth-$node.ipc"

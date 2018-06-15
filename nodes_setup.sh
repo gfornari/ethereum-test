@@ -97,11 +97,18 @@ main() {
     # check if js scripts dir already exists
     check_dir $JS_SCRIPTS_DIR
 
+    # get the run
+    RUN=0
+    while [[ -a $OUTPUT_DIR/node-setup-$node-$RUN.out ]];
+    do
+        RUN=$((RUN+1))
+    done 
+
     for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         # build datadir and output file string
         local readonly DATADIR=$BASE_DATADIR$node
         local readonly ETHASH_DIR=$BASE_ETHASH_DIR$node
-        local readonly OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node.out"
+        local readonly OUTPUT_FILE="$OUTPUT_DIR/node-setup-$node-$RUN.out"
         local readonly ROLE=$(echo $ROLE_LIST | jq -r ".[$node]")
 
         printf "Configuring node $node with role $ROLE...\n"
