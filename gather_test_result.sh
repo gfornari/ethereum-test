@@ -36,7 +36,7 @@ remove_old_results() {
     local readonly test_dir=$4
 
     rm -rf $test_dir/*
-    cmd="rm -rf $result_path/*"
+    cmd="rm -rf $result_path/*; rm -rf $REPO_OUT_DIR/logs/*;"
     echo $cmd | ssh "$login_name@$address" "bash -s"
 }
 
