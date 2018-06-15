@@ -96,10 +96,6 @@ main() {
 
     # check if js scripts dir already exists
     check_dir $JS_SCRIPTS_DIR
-
-    printf "===== SETUP ====\n"
-    ls $OUTPUT_DIR/
-    printf "====\n"
     
     # get the run
     RUN=0
@@ -107,8 +103,6 @@ main() {
     do
         RUN=$((RUN+1))
     done
-    echo $OUTPUT_DIR/node-setup-0-$RUN.out
-    printf "================\n"
 
     for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         # build datadir and output file string

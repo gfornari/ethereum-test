@@ -91,21 +91,12 @@ main() {
 
     printf "Let's start $ROLE_LIST $NODES_AMOUNT nodes\n"
 
-    # get the run
-    RUN=0
-    printf "===== BENCH ====\n"
-    ls $OUTPUT_DIR
-    printf "====\n"
-   
-    
+    # Get the run number to create different logs
+    RUN=0 
     while [[ -a "$OUTPUT_DIR/node-0-$RUN.out" ]];
     do
         RUN=$((RUN+1))
     done
-    echo $OUTPUT_DIR/node-0-$RUN.out
-    printf "================\n"
-
-    printf "RUN=$RUN\n"
 
     for node in $(seq 0 $(($NODES_AMOUNT - 1))); do
         # build datadir and output file string
