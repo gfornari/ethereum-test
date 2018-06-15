@@ -93,8 +93,11 @@ main() {
 
     # get the run
     RUN=0
+    printf "-------------\n"
     ls $OUTPUT_DIR
+    printf "----\n"
     echo $OUTPUT_DIR/node-0-$RUN.out
+    printf "-------------\n"
     
     while [[ -a "$OUTPUT_DIR/node-0-$RUN.out" ]];
     do
