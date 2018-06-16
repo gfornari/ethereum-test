@@ -19,6 +19,14 @@ stop_machine() {
     ssh "$login_name@$address" pkill -HUP geth
     ssh "$login_name@$address" pkill -HUP ./cpu_mem_info.sh
 
+    while [[ true ]]; do
+        ssh "$login_name@$address" pgrep geth
+        if [[ "$?" -eq "1" ]]; then
+            break
+        fi
+        sleep 0.5
+    done
+
 }
 
 
@@ -44,7 +52,6 @@ main() {
         echo $computer > $tmp_file
         login_name=$(jq -r ".login_name" $tmp_file)
         address=$(jq -r ".address" $tmp_file)
-        num_client=$(jq -r ".client_number" $tmp_file)
         
         stop_machine "$login_name" "$address"
         
