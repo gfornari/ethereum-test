@@ -114,8 +114,8 @@ main() {
 
         printf "Starting node $node with role $ROLE...\n"
         
-        PORT=$((30300 + $node))
-    
+        # PORT=$((30300 + $node))
+        PORT=0
 
         printf "conf = {};
             conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
