@@ -70,8 +70,16 @@ main() {
     local readonly ID=$1
     local readonly DATADIR=$3
     local readonly IPC_PATH=$7
+    local readonly PORT=$9
     shift # Forget about the first argument
     local GETH_ARGS="$@"
+
+    # Kill existing pid that are using the ports
+    PRE_EXISTING_PID=$(lsof -ti $PORT)
+    if [[ "$?" -eq "0" ]]; then
+        pkill -HUP PRE_EXISTING_PID
+        sleep 2
+    fi
 
     geth $GETH_ARGS &
     
