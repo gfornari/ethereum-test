@@ -34,6 +34,7 @@ main() {
     ./gather_test_result.sh $CONF_FILE clean
 
     for i in $( seq 1 $ITERATIONS ); do
+        ./graceful_shutdown $CONF_FILE
         ./setup.sh $CONF_FILE
     done
 
