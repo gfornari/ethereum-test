@@ -24,26 +24,43 @@ def main(argv):
     if len(argv) > 11:
         miner_per_machine = int(argv[11])
     
+    
     nodes=[]
     
     with open(miner_ips_file, "r") as fd:
-        ip_address_list = fd.readlines()
-        for ip in ip_address_list:
-            ip.strip() != "" # Avoid considering empty lines
-            if ip.strip() != "": # Avoid considering empty lines
-                roles = []
-                for i in range(miner_per_machine):
-                    roles.append("miner")
-                nodes.append({"address": ip.strip(), "login_name": login_name, "roles":roles})
+        ip_address_list = [ip.strip() for ip in fd.readlines() if ip.strip() != ""]
+        number_of_miner_machines = len(ip_address_list)
+        if len(argv) > 13:
+            tmp = int(argv[13])
+            if tmp > number_of_miner_machines:
+                print("Warning number of miner machines exceed ips in " + miner_ips_file + " . Exit ...")
+                sys.exit(1)
+            number_of_miner_machines = tmp
+
+            
+           
+        for i in range(number_of_miner_machines):
+            ip = ip_address_list[i]
+            roles = []
+            for i in range(miner_per_machine):
+                roles.append("miner")
+            nodes.append({"address": ip.strip(), "login_name": login_name, "roles":roles})
 
     with open(client_ips_file, "r") as fd:
-        ip_address_list = fd.readlines()
-        for ip in ip_address_list:
-            if ip.strip() != "": # Avoid considering empty lines
-                roles = []
-                for i in range(client_per_machine):
-                    roles.append("client")
-                nodes.append({"address": ip.strip(), "login_name": login_name, "roles":roles})
+        ip_address_list = [ip.strip() for ip in fd.readlines() if ip.strip() != ""]
+        number_of_client_machines = len(ip_address_list)
+        if len(argv) > 12:
+                tmp = int(argv[12])
+                if tmp > number_of_client_machines:
+                    print("Warning number of client machines exceed ips in " + client_ips_file + " . Exit ...")
+                    sys.exit(1)
+                number_of_miner_machines = tmp
+        for i in range(number_of_client_machines):
+            ip = ip_address_list[i]
+            roles = []
+            for i in range(client_per_machine):
+                roles.append("client")
+            nodes.append({"address": ip.strip(), "login_name": login_name, "roles":roles})
             
 
             
@@ -53,11 +70,12 @@ def main(argv):
 
 if __name__ == '__main__':    
     
-    if len(sys.argv) < 10:
+    if len(sys.argv) < 11:
         print("Usage: %s <client_ip-file> <miner_ip-file> <test-time> <padding-time> \
             <tx_interval> <test-output-dir> <start_difficulty>\
             <login_name> <bootnode-enode> <output_file> \
-            [number-of-client-per-machine] [number-of-miner-per-machine]" % sys.argv[0])
+            [number-of-clients-per-machine] [number-of-miners-per-machine] \
+            [number of client machines] [number of mining machines]" % sys.argv[0])
         sys.exit(0)
     main(sys.argv[1:])
 
