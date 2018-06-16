@@ -65,6 +65,7 @@ generate_ethash_structs() {
         printf "Generating the dag in $ETHASH_DAG_DIR."
         printf " This may take a while ...\n"
         geth makedag 0 "$ETHASH_DAG_DIR"
+        geth makedag 30001 "$ETHASH_DAG_DIR"
         printf "Dag generated\n"
     fi
 
