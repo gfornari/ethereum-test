@@ -35,26 +35,21 @@ start_benchmark() {
     if [[ "$ROLE" = "miner" ]]; then
         printf "$ROLE is miner...\n"
         extra_option="--mine --minerthreads 1"
-        nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
-        "$NODE_ID" \
-        "--datadir" "$DATADIR" \
-        "--keystore" "$KEYSTORE" \
-        "--ipcpath" "$IPC_PATH" \
-        "--port" "$PORT" \
-        "--networkid" "$NETWORKID" \
-        "--bootnodes" "$BOOTNODES" \
-        "--metrics" \
-        "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
-        "--ethash.dagdir" "$ETHASH_DAG_DIR" \
-        "--ethash.dagsondisk" "1" \
-        "--mine" \
-        "--minerthreads" "1" \
-        >> $OUTPUT_FILE 2>&1 &
     fi
     
     if [[ "$ROLE" = "client" ]]; then
         printf "$ROLE is client...\n"
-        nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
+        js_cmd="js $JS_SCRIPT_PATH"
+    fi
+    
+    
+    js_cmd=$(eval echo $js_cmd)
+    extra_option=$(eval echo $extra_option)
+
+    printf "Node $NODE_ID"
+    
+    echo "$OUTPUT_FILE"
+    nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
         "$NODE_ID" \
         "--datadir" "$DATADIR" \
         "--keystore" "$KEYSTORE" \
@@ -66,9 +61,9 @@ start_benchmark() {
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
         "--ethash.dagsondisk" "1" \
+        "$extra_option" \
+        "$js_cmd" \
         >> $OUTPUT_FILE 2>&1 &
-        # js $JS_SCRIPT_PATH
-    fi
 }
 
 
@@ -120,7 +115,6 @@ main() {
         printf "Starting node $node with role $ROLE...\n"
         
         PORT=$((30300 + $node))
-        
 
         printf "conf = {};
             conf.accountIndex = $(($FIRST_NODE_INDEX + $node));
