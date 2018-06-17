@@ -112,6 +112,8 @@ main() {
         local readonly JS_SCRIPT_PATH="$JS_SCRIPTS_DIR/node-$node.js"
         local readonly IPC_PATH="$HOME/geth-$node.ipc"
 
+        echo $ROLE > $OUTPUT_DIR/role-$node.out
+
         printf "Starting node $node with role $ROLE...\n"
         
         PORT=$((30300 + $node))
