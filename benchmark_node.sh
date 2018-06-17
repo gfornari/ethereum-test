@@ -54,7 +54,6 @@ start_benchmark() {
     
     if [[ "$ROLE" = "client" ]]; then
         printf "$ROLE is client...\n"
-        js_cmd="js $JS_SCRIPT_PATH"
         nohup timeout -s SIGUSR1 "$TEST_TIMEOUT" ./geth_with_catch.sh \
         "$NODE_ID" \
         "--datadir" "$DATADIR" \
@@ -67,8 +66,8 @@ start_benchmark() {
         "--ethash.cachedir" "$ETHASH_CACHE_DIR" \
         "--ethash.dagdir" "$ETHASH_DAG_DIR" \
         "--ethash.dagsondisk" "1" \
-        "js" "$JS_SCRIPT_PATH" \
         >> $OUTPUT_FILE 2>&1 &
+        # js $JS_SCRIPT_PATH
     fi
 }
 
