@@ -16,8 +16,11 @@ stop_machine() {
     local login_name=$1
     local address=$2
 
+    printf "Stopping machine $login_name@$address\n"
+
     ssh "$login_name@$address" pkill -HUP geth
     ssh "$login_name@$address" pkill -HUP ./cpu_mem_info.sh
+
 
     while [[ true ]]; do
         ssh "$login_name@$address" pgrep geth
