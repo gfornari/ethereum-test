@@ -30,7 +30,7 @@ start_benchmark() {
     # js_cmd=$(eval echo $js_option)
 
     local extra_option=""
-    local js_cmd=
+    local js_cmd=""
     
     if [[ "$ROLE" = "miner" ]]; then
         printf "$ROLE is miner...\n"
