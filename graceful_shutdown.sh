@@ -6,8 +6,6 @@ readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
 
-readonly IP_ADDRESS=`ip route get 8.8.8.8 | awk 'NR==1 {print $NF}'`
-
 #
 # Given the configuration information of a single machine stop **ALL**
 # geth instances that are running on the particular computer
