@@ -57,6 +57,8 @@ generate_ethash_structs() {
     printf "Generating the cache in $ETHASH_CACHE_DIR."
     printf " This may take a while ...\n"
     geth makecache 0 "$ETHASH_CACHE_DIR"
+    geth makecache 30001 "$ETHASH_CACHE_DIR"
+    geth makecache 60001 "$ETHASH_CACHE_DIR"
     printf "Cache Generated\n"
 
     
