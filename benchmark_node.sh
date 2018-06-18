@@ -132,9 +132,9 @@ main() {
             "$OUTPUT_FILE" \
             "$ROLE" \
             "$TIMEOUT_INTERVAL" \
-            "$ETHASH_DIR"
+            "$ETHASH_DIR" &
     
-        printf "Node started. Output in $OUTPUT_FILE\n"
+        # printf "Node started. Output in $OUTPUT_FILE\n"
     done
 }
 
