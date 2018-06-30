@@ -34,6 +34,16 @@ catch() {
     geth --exec "timestamps=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 timestamps.push(eth.getBlock(i).timestamp); }; timestamps; " \
                 attach ipc://$IPC_PATH > /tmp/final_timestamps-$ID.txt
+      
+    geth --exec "blocks_hashes=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
+                blocks.push(eth.getBlock(i).hash); }; blocks; " \
+                attach ipc://$IPC_PATH > /tmp/final_blocks-$ID.txt
+    
+    geth --exec "arr=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
+                arr.push(eth.getBlock(i).gasLimit); }; arr; " \
+                attach ipc://$IPC_PATH > /tmp/final_gasLimit-$ID.txt
+    
+    
     
     # get the run
     RUN=0
@@ -45,9 +55,13 @@ catch() {
     # Put each entry of the javascript list in a separate line
     cat /tmp/final_difficulty-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_difficulty-$ID-$RUN.txt
     cat /tmp/final_timestamps-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_timestamps-$ID-$RUN.txt
+    cat /tmp/final_block_hashes-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_hashes-$ID-$RUN.txt
+    cat /tmp/final_gasLimit-$ID.txt | tr "[]" " " | tr "," "\n" > test/final_gasLimit-$ID-$RUN.txt
 
     rm /tmp/final_timestamps-$ID.txt
     rm /tmp/final_difficulty-$ID.txt
+    rm /tmp/final_block_hashes-$ID.txt
+    rm /tmp/final_gasLimit-$ID.txt
 
     tmp=$(geth attach --exec "JSON.stringify(debug.metrics(true))" ipc://$IPC_PATH)
     eval echo $tmp >> test/metrics-$ID-$RUN.json
