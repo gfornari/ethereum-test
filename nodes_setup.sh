@@ -26,18 +26,19 @@ check_dir() {
     fi
 }
 
-read_chainid() {
-    grep -E -o '"chainId"\s*:\s*[0-9]+' conf/genesis_block.json | grep -E -o '[0-9]+'
-}
 
 init_genesis() {
     local readonly DATADIR=$1
     local readonly OUTPUT_FILE=$2
     local readonly TIMESTAMP=$3
     local readonly START_DIFFICULTY=$4
+    local readonly GENESIS_FILE=$5
+    local readonly GAS_LIMIT=$6
 
-    cat conf/genesis_block.json | jq ".timestamp=\"$TIMESTAMP\"" \
-    | jq ".difficulty=\"$START_DIFFICULTY\"" > /tmp/genesis_block.json
+    cat $GENESIS_FILE \
+    | jq ".timestamp=\"$TIMESTAMP\"" \
+    | jq ".difficulty=\"$START_DIFFICULTY\"" \
+    | jq ".gasLimit=\"$GAS_LIMIT\"" > /tmp/genesis_block.json
 
 
     
@@ -78,14 +79,16 @@ generate_ethash_structs() {
 main() { 
 
     # check arguments
-    if [ $# -lt 3 ]; then
-        printf "Usage: `basename "$0"` <role_list> <timestamp> <start-difficulty>\n"
+    if [ $# -lt 5 ]; then
+        printf "Usage: `basename "$0"` <role_list> <timestamp> <start-difficulty> < genesis_file> <gas limit>\n"
         exit 1
     fi
   
     local readonly ROLE_LIST=$1
     local readonly TIMESTAMP=$2
     local readonly START_DIFFICULTY=$3
+    local readonly GENESIS_FILE=$4
+    local readonly GAS_LIMIT=$5
 
     local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
@@ -123,7 +126,7 @@ main() {
         rm -rf $OUTPUT_FILE
 
         # init genesis block
-        init_genesis $DATADIR $OUTPUT_FILE $TIMESTAMP $START_DIFFICULTY
+        init_genesis $DATADIR $OUTPUT_FILE $TIMESTAMP $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT
 
         generate_ethash_structs \
             $ROLE \

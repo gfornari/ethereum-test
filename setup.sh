@@ -70,7 +70,7 @@ setup_machine() {
     rsync -a ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
     
     cmd="cd $REPO_OUTPUT_DIR; \
-        $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY;"
+        $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT;"
 
     echo $cmd | ssh "$login_name@$address" "bash -s"
 }
@@ -119,6 +119,14 @@ main() {
     local readonly TIMEOUT_BENCHMARK="${RAW_TIMEOUT_BENCHMARK}s"
     local readonly TX_INTERVAL=$(jq -r ".tx_interval" $CONF_FILE)
     local readonly START_DIFFICULTY=$(jq -r ".start_difficulty" $CONF_FILE)
+    local readonly GENESIS_FILE=$(jq -r ".genesis_file" $CONF_FILE)
+
+    local GAS_LIMIT=$(jq -r ".gasLimit" $CONF_FILE)
+    # It is not defined in the configuration file. Let's take the default one
+    if [[ "$tmp_gas_limit" == "null" ]]; then
+        GAS_LIMIT=$(jq -r ".gasLimit" $GENESIS_FILE)
+    fi
+
 
     printf "START_DIFFICULTY = $START_DIFFICULTY"
     
@@ -157,7 +165,7 @@ main() {
         local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
         printf "$role_list"
        
-        setup_machine "$login_name" "$address" "$role_list" "$timestamp" "$START_DIFFICULTY"
+        setup_machine "$login_name" "$address" "$role_list" "$timestamp" "$START_DIFFICULTY" "$GENESIS_FILE" "$GAS_LIMIT"
         
         COMPUTER_ID=$((COMPUTER_ID+1))
     done
