@@ -21,6 +21,11 @@ main() {
 
     printf "Benchmark with ITERATIONS $ITERATIONS\n"
 
+    # Check if the configuration file exists
+    if [[ ! -f "$CONF_FILE" ]]; then
+        printf "The configuration file $CONF_FILE does not exists"
+        exit 1;
+    fi
 
     # Check if the configuration file is a valid json...
     cat $CONF_FILE | jq "." 2> /dev/null > /dev/null
@@ -29,8 +34,10 @@ main() {
         exit 1;
     fi
 
-    # Remove old results ...
-    rm test/* -R
+    TEST_DIR=$(jq -r ".test_dir" $CONF_FILE)
+    printf "$TEST_DIR"
+
+    rm $TEST_DIR/* -R
     ./gather_test_result.sh $CONF_FILE clean
 
     for i in $( seq 1 $ITERATIONS ); do
@@ -40,6 +47,7 @@ main() {
 
     # Get new results
     ./gather_test_result.sh $CONF_FILE gather
+   
 }
 
 main $ARGS
