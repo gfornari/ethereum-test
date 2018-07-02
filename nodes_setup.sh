@@ -79,16 +79,24 @@ generate_ethash_structs() {
 main() { 
 
     # check arguments
-    if [ $# -lt 5 ]; then
-        printf "Usage: `basename "$0"` <role_list> <timestamp> <start-difficulty> < genesis_file> <gas limit>\n"
+    if [ $# -lt 6 ]; then
+        printf "Usage: `basename "$0"` [cmd] <role_list> <timestamp> <start-difficulty> < genesis_file> <gas limit>\n"
         exit 1
     fi
+
+    local readonly CMD=$1
+    if [[ "$CMD" == "ethash" ]]; then
+    elif [[ "$CMD" == "genesis" ]]; then
+    else
+        printf "Command $CMD not found. Only [ethash|genesis] are recognized"
+    fi
+
   
-    local readonly ROLE_LIST=$1
-    local readonly TIMESTAMP=$2
-    local readonly START_DIFFICULTY=$3
-    local readonly GENESIS_FILE=$4
-    local readonly GAS_LIMIT=$5
+    local readonly ROLE_LIST=$2
+    local readonly TIMESTAMP=$3
+    local readonly START_DIFFICULTY=$4
+    local readonly GENESIS_FILE=$5
+    local readonly GAS_LIMIT=$6
 
     local readonly NODES_AMOUNT=$(echo $ROLE_LIST | jq "length")
     
@@ -125,12 +133,14 @@ main() {
         rm -rf $DATADIR
         rm -rf $OUTPUT_FILE
 
-        # init genesis block
-        init_genesis $DATADIR $OUTPUT_FILE $TIMESTAMP $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT
-
-        generate_ethash_structs \
-            $ROLE \
-            $ETHASH_DIR >> $OUTPUT_FILE
+        if [[ "$CMD" == "genesis" ]]; then
+            # init genesis block
+            init_genesis $DATADIR $OUTPUT_FILE $TIMESTAMP $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT
+        elif [[ "$CMD" == "ethash" ]]; then
+            generate_ethash_structs \
+                $ROLE \
+                $ETHASH_DIR >> $OUTPUT_FILE
+        fi
     done
         
     # end for each

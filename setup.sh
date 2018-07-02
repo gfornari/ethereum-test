@@ -48,6 +48,23 @@ start_benchmark() {
 
 }
 
+
+generate_ethash_structures() {
+    local readonly login_name=$1
+    local readonly address=$2
+    local readonly role_list=$3
+    local readonly timestamp=$4
+    local readonly START_DIFFICULTY=$5
+
+    rsync -a ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
+    
+    cmd="cd $REPO_OUTPUT_DIR; \
+        $NODES_SETUP_SCRIPT ethash '$role_list' $timestamp $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT;"
+
+    echo $cmd | ssh "$login_name@$address" "bash -s"
+    
+}
+
 setup_machine() {
     local readonly login_name=$1
     local readonly address=$2
@@ -70,7 +87,7 @@ setup_machine() {
     rsync -a ./$LOCAL_REPO_DIR/ $login_name@$address:$REPO_OUTPUT_DIR
     
     cmd="cd $REPO_OUTPUT_DIR; \
-        $NODES_SETUP_SCRIPT '$role_list' $timestamp $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT;"
+        $NODES_SETUP_SCRIPT genesis '$role_list' $timestamp $START_DIFFICULTY $GENESIS_FILE $GAS_LIMIT;"
 
     echo $cmd | ssh "$login_name@$address" "bash -s"
 }
@@ -133,7 +150,7 @@ main() {
 
     printf "The bootnode address is: $ENODE_ADDRESS ...\n"
 
-    timestamp=$(date +%s)
+  
 
     local readonly LOCAL_REPO_DIR=$(basename $GIT_REPOSITORY)
     if ! [[ -d "./$LOCAL_REPO_DIR" ]]; then
@@ -143,9 +160,11 @@ main() {
     git checkout $BRANCH_NAME
     git pull
     cd ..
+
+    timestamp=$(date +%s)
     
     #
-    # Configure all the machines
+    # Generate the dag
     #
     #FOR_EACH COMPUTER IN TEST_CONF
     local COMPUTER_ID=0
@@ -163,7 +182,36 @@ main() {
         local readonly address=$(jq -r ".address" $tmp_file)
         # Compact output, get rid of spaces!
         local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
-        printf "$role_list"
+       
+        generate_ethash_structures "$login_name" "$address" "$role_list" "$timestamp" "$START_DIFFICULTY" "$GENESIS_FILE" "$GAS_LIMIT"
+        
+        COMPUTER_ID=$((COMPUTER_ID+1))
+    done
+    #END FOR_EACH
+
+    printf "Ethash structures generated ..\n"
+    
+    timestamp=$(date +%s)
+    
+    #
+    # Generate the dag
+    #
+    #FOR_EACH COMPUTER IN TEST_CONF
+    local COMPUTER_ID=0
+    local START_NODE_ID=0
+    local COMPUTER=""
+    while [ true ]; do
+        COMPUTER=$(jq -r ".nodes[$COMPUTER_ID]" $CONF_FILE)
+        if [ "$COMPUTER" == "null" ]; then
+            break;
+        fi
+        tmp_file=/tmp/tmp.json
+        
+        echo $COMPUTER > $tmp_file
+        local readonly login_name=$(jq -r ".login_name" $tmp_file)
+        local readonly address=$(jq -r ".address" $tmp_file)
+        # Compact output, get rid of spaces!
+        local readonly role_list="$(jq -r -c ".roles" $tmp_file)"
        
         setup_machine "$login_name" "$address" "$role_list" "$timestamp" "$START_DIFFICULTY" "$GENESIS_FILE" "$GAS_LIMIT"
         
@@ -171,8 +219,7 @@ main() {
     done
     #END FOR_EACH
 
-    printf "Setup done ..\n"
-    
+    printf "Setup finished ..\n"
 
 
 
