@@ -36,7 +36,7 @@ catch() {
                 attach ipc://$IPC_PATH > /tmp/final_timestamps-$ID.txt
       
     geth --exec "blocks_hashes=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
-                blocks.push(eth.getBlock(i).hash); }; blocks; " \
+                blocks_hashes.push(eth.getBlock(i).hash); }; blocks_hashes; " \
                 attach ipc://$IPC_PATH > /tmp/final_block_hashes-$ID.txt
     
     geth --exec "arr=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
