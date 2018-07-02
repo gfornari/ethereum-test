@@ -22,6 +22,8 @@ gather_info() {
     do
         ./column_composer.py $test_dir/$address/final_difficulty-$ID-*.txt $test_dir/$address/final_difficulty-$ID.csv
         ./column_composer.py $test_dir/$address/final_timestamps-$ID-*.txt $test_dir/$address/final_timestamps-$ID.csv
+        ./column_composer.py $test_dir/$address/final_gasLimit-$ID-*.txt $test_dir/$address/final_gasLimit-$ID.csv
+        ./column_composer.py $test_dir/$address/final_hashes-$ID-*.txt $test_dir/$address/final_hashes-$ID.csv 
     done
     
 

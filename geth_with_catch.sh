@@ -37,7 +37,7 @@ catch() {
       
     geth --exec "blocks_hashes=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 blocks.push(eth.getBlock(i).hash); }; blocks; " \
-                attach ipc://$IPC_PATH > /tmp/final_blocks-$ID.txt
+                attach ipc://$IPC_PATH > /tmp/final_block_hashes-$ID.txt
     
     geth --exec "arr=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 arr.push(eth.getBlock(i).gasLimit); }; arr; " \
