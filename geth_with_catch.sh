@@ -41,7 +41,9 @@ catch() {
     
     geth --exec "arr=[]; for(i = 0; i < $BLOCK_NUMBER; i++) {\
                 arr.push(eth.getBlock(i).gasLimit); }; arr; " \
-                attach ipc://$IPC_PATH > /tmp/final_gasLimit-$ID.txt
+                attach ipc://$IPC_PATH \
+                | sed "s/\"//g" \
+                | sed "s/ //g" > /tmp/final_gasLimit-$ID.txt
     
     
     
