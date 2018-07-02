@@ -86,7 +86,9 @@ main() {
 
     local readonly CMD=$1
     if [[ "$CMD" == "ethash" ]]; then
+        :
     elif [[ "$CMD" == "genesis" ]]; then
+        :
     else
         printf "Command $CMD not found. Only [ethash|genesis] are recognized"
     fi
