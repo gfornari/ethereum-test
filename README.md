@@ -1,12 +1,12 @@
 # ethereum-test
 
-Ethereum test allow you to create an Ethereum Private Network using the go ethereum client.
+Ethereum test allows creating an Ethereum Private Network using the go ethereum client.
 
 ## Getting Started
 
 ```sh
    git clone https://github.com/gfornari/ethereum-test.git
-   git checkout benchmark
+   git checkout master
 ```
 
 ### Prerequisites
@@ -48,7 +48,7 @@ To setup a network you need a configuration file
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Any contribution is much appreciated.
 
 ## Authors
 
