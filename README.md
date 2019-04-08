@@ -48,7 +48,7 @@ To setup a network you need a configuration file
 
 ## Contributing
 
-Any contribution is much appreciated.
+Any contribution is much appreciated ;)
 
 ## Authors
 
